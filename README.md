@@ -25,7 +25,7 @@ Il PDF generato non viene versionato; il template di esempio in `template/` è m
 Ogni push su `main` compila la tesi e pubblica automaticamente il PDF con GitHub Pages. Dopo la prima pubblicazione, il relatore può aprirlo sempre allo stesso indirizzo:
 
 ```text
-https://<utente>.github.io/<repository>/tesi.pdf
+https://robertothe751.github.io/tesi/tesi.pdf
 ```
 
 Per attivare la pubblicazione la prima volta, nelle impostazioni del repository seleziona **Settings → Pages → Build and deployment → Source → GitHub Actions**. Le pull request continuano a verificare la compilazione, ma non pubblicano il PDF.
