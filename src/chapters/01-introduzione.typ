@@ -2,28 +2,36 @@
 
 = Introduzione <introduzione>
 \
-La gestione in tempo reale delle informazioni legate agli eventi e alle organizzazioni rappresentano un requisito fondamentale per l'efficienza dei sistemi aziendali moderni. La necessità di esporre dati aggiornati in modo affidabile si estende spesso anche al di fuori dei tradizionali client software, richiedendo l'impiego di soluzioni hardware dedicate collocate presso le sedi delle organizzazioni clienti.
+La gestione in tempo reale delle informazioni legate agli eventi e alle organizzazioni rappresentano un requisito fondamentale per l'efficienza dei sistemi aziendali moderni. La necessità di esporre dati aggiornati in modo affidabile si estende spesso anche attraverso l'impiego di soluzioni hardware dedicate collocate presso le sedi delle organizzazioni clienti senza richiedere l'utilizzo diretto di computer o applicazioni gestionali.
 
 \
 
-Questo elaborato presenta il progetto di stage svolto presso l'azienda *Spazio Dev S.r.l.*, situata a Tombolo (Padova), avente a oggetto lo sviluppo di un'interfaccia utente su microcontrollori ESP32 dotati di display . Il sistema è progettato per comunicare direttamente con *RelAi*, il CRM aziendale , visualizzando in tempo reale informazioni chiave quali codici QR, prenotazioni di eventi, il contatore degli iscritti a un'organizzazione e il contatore dei partecipanti a un evento .
+Questo elaborato presenta il progetto di stage svolto presso l'azienda *Spazio Dev S.r.l.*, situata a Tombolo (Padova), avente a oggetto lo sviluppo di un'interfaccia utente su microcontrollori ESP32 dotati di display . Il sistema è progettato per comunicare direttamente con *RelAi*, il CRM aziendale, visualizzando in tempo reale informazioni chiave quali codici QR, prenotazioni di eventi, il contatore degli iscritti ad un'organizzazione e il contatore dei partecipanti ad un evento .
 \
 == L’azienda
 \
 Spazio Dev S.r.l. opera nel settore dello sviluppo software e della consulenza informatica, offrendo soluzioni tecnologiche avanzate per la gestione aziendale e dei flussi operativi. Il progetto di stage si inserisce nel contesto dell'ecosistema software aziendale, integrandosi con la piattaforma CRM RelAi per estendere le funzionalità di monitoraggio e interazione visiva direttamente su dispositivi _embedded_ installati presso gli utenti finali .
 \
-== Il progetto e gli obiettivi
+== Il progetto
 \
-Il progetto prevede la realizzazione di un firmware robusto e di un'interfaccia grafica ottimizzata per dispositivi ESP32 . Gli obiettivi dello stage sono suddivisi in requisiti obbligatori, desiderabili e facoltativi, definiti in accordo con il tutor aziendale Matteo Forzan .
+IL'attività di stage riguarda la progettazione e lo sviluppo di una piattaforma firmware per microcontrollori ESP32 dotati di display. I dispositivi realizzati devono essere in grado di comunicare con il CRM RelAi e di presentare informazioni aggiornate in tempo reale mediante un'interfaccia grafica semplice e facilmente leggibile.
 \
-I *requisiti obbligatori* comprendono:
-- *O01:* L'analisi dei requisiti dei pannelli informativi e la progettazione dell'interfaccia, tenendo conto dei vincoli di risoluzione, memoria e prestazioni del display.
-- *O02:* La realizzazione della procedura di configurazione iniziale, inclusi il provisioning della rete Wi-Fi tramite portale dedicato, il salvataggio persistente delle impostazioni e la funzione di reset.
-- *O03:* L'abbinamento del dispositivo al CRM RelAi e lo sviluppo del client per il consumo delle API aziendali, supportato da un aggiornamento periodico e da una cache locale dell'ultimo dato valido.
-- *O04:* La visualizzazione sul display dei codici QR, dei contatori (iscritti e partecipanti) e delle prenotazioni degli eventi, gestendo opportunamente le schermate di stato e di errore (come l'assenza di rete).
-- *O05:* L'esecuzione di test funzionali e di durata sull'hardware, completati dalla stesura della documentazione tecnica.
+La soluzione proposta prevede l'utilizzo di pannelli informativi intelligenti capaci di visualizzare differenti tipologie di contenuto, tra cui codici QR, informazioni relative agli eventi e dati statistici riguardanti organizzazioni e partecipanti. Il progetto comprende inoltre tutti gli aspetti necessari alla configurazione, all'integrazione e alla gestione operativa dei dispositivi.
 \
-Tra i *requisiti desiderabili* figurano la configurazione remota dei pannelli direttamente da RelAi, l'esposizione di una pagina di diagnostica locale, la rotazione automatica tra più schermate e la predisposizione per l'aggiornamento del firmware _over-the-air_ (OTA). Sono inoltre previsti requisiti facoltativi orientati all'estensione delle funzionalità in tempo reale e al supporto multi-display.
+== Obiettivi dello stage
+\
+Lo stage si pone l'obiettivo di sviluppare una soluzione affidabile e facilmente utilizzabile, in grado di collegare il mondo dei sistemi gestionali aziendali con quello dei dispositivi embedded.
+\
+Le attività previste comprendono:
+
+- l'analisi dei requisiti funzionali e tecnici del sistema;
+- lo studio della piattaforma hardware ESP32 e delle tecnologie software necessarie;
+- la progettazione dell'architettura firmware;
+- lo sviluppo dell'interfaccia grafica e dei meccanismi di comunicazione con il CRM;
+- la verifica del corretto funzionamento della soluzione mediante attività di test;
+- la produzione della documentazione tecnica relativa al progetto. 【1-0fe4cc】
+\
+Nel corso delle prime settimane di attività è stata svolta un'intensa fase di analisi e studio preliminare, finalizzata alla comprensione della piattaforma hardware, delle librerie software e delle modalità di integrazione con il sistema RelAi. Tale fase costituisce la base per le successive attività di sviluppo e validazione previste dal piano di lavoro.
 \
 == Perimetro e vincoli
 \
@@ -31,7 +39,7 @@ Lo sviluppo su microcontrollore ESP32 impone vincoli rigorosi in termini di riso
 \
 == Organizzazione dello stage
 \
-Il piano di attività ha una durata complessiva di 300 ore, suddivise indicativamente in otto settimane (dal 21 settembre al 20 novembre 2026)[cite: 17, 18]. Le prime settimane sono dedicate all'analisi preliminare, allo studio della piattaforma hardware ESP32 e delle librerie grafiche, per poi procedere con lo sviluppo incrementale del provisioning di rete, del client API, del rendering dei pannelli e delle funzioni di diagnostica e test finali[cite: 18].
+Il piano di attività ha una durata complessiva di 300 ore, suddivise indicativamente in otto settimane (dal 21 settembre al 20 novembre 2026). Le prime settimane sono dedicate all'analisi preliminare, allo studio della piattaforma hardware ESP32 e delle librerie grafiche, per poi procedere con lo sviluppo incrementale del provisioning di rete, del client API, del rendering dei pannelli e delle funzioni di diagnostica e test finali.
 \
 == Organizzazione del testo
 \

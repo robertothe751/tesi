@@ -1,6 +1,6 @@
 #set document(
-  title: "Sviluppo di un prototipo di biglietteria automatizzata conforme alla normativa AdE/SIAE",
-  author: "Edis Hodja",
+  title: "Interfaccia UI per dispositivi ESP32 per la visualizzazione di informazioni in tempo reale",
+  author: "Roberto Mariano Doroftei",
   keywords: ("tesi", "informatica", "Università di Padova"),
 )
 
