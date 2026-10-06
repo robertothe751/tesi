@@ -14,7 +14,7 @@ Spazio Dev S.r.l. opera nel settore dello sviluppo software e della consulenza i
 \
 == Il progetto
 \
-IL'attività di stage riguarda la progettazione e lo sviluppo di una piattaforma firmware per microcontrollori ESP32 dotati di display. I dispositivi realizzati devono essere in grado di comunicare con il CRM RelAi e di presentare informazioni aggiornate in tempo reale mediante un'interfaccia grafica semplice e facilmente leggibile.
+L'attività di stage riguarda la progettazione e lo sviluppo di una piattaforma firmware per microcontrollori ESP32 dotati di display. I dispositivi realizzati devono essere in grado di comunicare con il CRM RelAi e di presentare informazioni aggiornate in tempo reale mediante un'interfaccia grafica semplice e facilmente leggibile.
 \
 La soluzione proposta prevede l'utilizzo di pannelli informativi intelligenti capaci di visualizzare differenti tipologie di contenuto, tra cui codici QR, informazioni relative agli eventi e dati statistici riguardanti organizzazioni e partecipanti. Il progetto comprende inoltre tutti gli aspetti necessari alla configurazione, all'integrazione e alla gestione operativa dei dispositivi.
 \

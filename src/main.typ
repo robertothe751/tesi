@@ -101,6 +101,7 @@ Il presente documento descrive il lavoro svolto durante il periodo di stage svol
 #pagebreak()
 #counter(page).update(1)
 #set page(numbering: "1.")
+#set heading(numbering: "1.1")
 
 #include "chapters/01-introduzione.typ"
 #include "chapters/02-processi-metodologie.typ"
