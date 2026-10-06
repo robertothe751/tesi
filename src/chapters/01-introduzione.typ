@@ -6,7 +6,7 @@ La gestione in tempo reale delle informazioni legate agli eventi e alle organizz
 
 \
 
-Questo elaborato presenta il progetto di stage svolto presso l'azienda *Spazio Dev S.r.l.*, situata a Tombolo (Padova), avente a oggetto lo sviluppo di un'interfaccia utente su microcontrollori ESP32 dotati di display . Il sistema è progettato per comunicare direttamente con *RelAi*, il CRM aziendale, visualizzando in tempo reale informazioni chiave quali codici QR, prenotazioni di eventi, il contatore degli iscritti ad un'organizzazione e il contatore dei partecipanti ad un evento .
+Questo elaborato presenta il progetto di stage svolto presso l'azienda *Spazio Dev S.r.l.*, situata a Tombolo (Padova), avente a oggetto lo sviluppo di un'interfaccia utente su microcontrollori ESP32 dotati di display. Il sistema è progettato per comunicare direttamente con *RelAi*, il CRM aziendale, visualizzando in tempo reale informazioni chiave quali codici QR, prenotazioni di eventi, il contatore degli iscritti ad un'organizzazione e il contatore dei partecipanti ad un evento.
 \
 == L’azienda
 \
@@ -29,7 +29,7 @@ Le attività previste comprendono:
 - la progettazione dell'architettura firmware;
 - lo sviluppo dell'interfaccia grafica e dei meccanismi di comunicazione con il CRM;
 - la verifica del corretto funzionamento della soluzione mediante attività di test;
-- la produzione della documentazione tecnica relativa al progetto. 【1-0fe4cc】
+- la produzione della documentazione tecnica relativa al progetto.
 \
 Nel corso delle prime settimane di attività è stata svolta un'intensa fase di analisi e studio preliminare, finalizzata alla comprensione della piattaforma hardware, delle librerie software e delle modalità di integrazione con il sistema RelAi. Tale fase costituisce la base per le successive attività di sviluppo e validazione previste dal piano di lavoro.
 \

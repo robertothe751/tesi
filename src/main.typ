@@ -81,9 +81,17 @@ Desidero poi ringraziare i miei amici per i bellissimi anni trascorsi insieme e 
 #set heading(numbering: none)
 
 = Sommario <sommario>
+\
+Il presente elaborato descrive l'attività di stage svolta presso #azienda nell'ambito del progetto finalizzato alla realizzazione di un sistema basato su microcontrollori ESP32 per la visualizzazione in tempo reale delle informazioni gestite dal CRM aziendale RelAi.
 
-Il presente documento descrive il lavoro svolto durante il periodo di stage svolto dal laureando #io presso l'azienda #azienda dalla durata di circa 300 ore.
+L'obiettivo del progetto consiste nello sviluppo di una piattaforma firmware in grado di integrare dispositivi dotati di display con il sistema gestionale aziendale, permettendo l'esposizione di dati aggiornati relativi a organizzazioni ed eventi. Tra le informazioni previste figurano codici QR, prenotazioni, contatori degli iscritti e dei partecipanti, nonché ulteriori dati configurabili tramite il CRM.
 
+L'attività di stage ha richiesto una fase preliminare di analisi dei requisiti e di studio delle tecnologie coinvolte, comprendente l'approfondimento dell'architettura ESP32, delle librerie grafiche per la realizzazione dell'interfaccia utente e delle modalità di comunicazione con i servizi software aziendali. Successivamente sono state affrontate le attività di progettazione dell'architettura della soluzione e della struttura del firmware, tenendo conto dei vincoli tipici dei sistemi embedded, quali risorse hardware limitate, affidabilità operativa e semplicità di configurazione.
+
+Il documento presenta il contesto aziendale nel quale si colloca il progetto, descrive le metodologie adottate durante lo stage e approfondisce l'analisi dei requisiti funzionali e non funzionali del sistema. Vengono inoltre illustrate le principali scelte progettuali e implementative, con particolare attenzione agli aspetti relativi alla comunicazione con il CRM, alla gestione dell'interfaccia grafica e alla robustezza della soluzione. Infine, sono riportate le attività di verifica e validazione svolte, i risultati ottenuti e alcune possibili evoluzioni future del progetto.
+
+L'elaborato conclude con una valutazione complessiva dell'esperienza di stage e del contributo formativo e professionale derivato dallo svolgimento del progetto.
+\
 #pagebreak()
 = Ringraziamenti <ringraziamenti>
 
