@@ -82,16 +82,15 @@ Desidero poi ringraziare i miei amici per i bellissimi anni trascorsi insieme e 
 
 = Sommario <sommario>
 \
-Il presente elaborato descrive l'attività di stage svolta presso #azienda nell'ambito del progetto finalizzato alla realizzazione di un sistema basato su microcontrollori ESP32 per la visualizzazione in tempo reale delle informazioni gestite dal CRM aziendale RelAi.
+Il presente documento descrive il lavoro svolto durante il periodo di stage curricolare, della durata di trecento ore, dal laureando #io (matricola #matricola) presso l’azienda #azienda. Lo stage è stato condotto sotto la supervisione del tutor aziendale Matteo Forzan, mentre il #relatore ha ricoperto il ruolo di tutor accademico.
 
-L'obiettivo del progetto consiste nello sviluppo di una piattaforma firmware in grado di integrare dispositivi dotati di display con il sistema gestionale aziendale, permettendo l'esposizione di dati aggiornati relativi a organizzazioni ed eventi. Tra le informazioni previste figurano codici QR, prenotazioni, contatori degli iscritti e dei partecipanti, nonché ulteriori dati configurabili tramite il CRM.
+Questa tesi tratta la progettazione e lo sviluppo di un'interfaccia utente su microcontrollori ESP32 dotati di display, finalizzata alla visualizzazione in tempo reale delle informazioni gestite da RelAi, il CRM aziendale di #azienda. Il sistema permette di esporre dati chiave quali codici QR, prenotazioni di eventi, il contatore degli iscritti a un'organizzazione e il contatore dei partecipanti a un evento direttamente presso le sedi delle organizzazioni clienti.
 
-L'attività di stage ha richiesto una fase preliminare di analisi dei requisiti e di studio delle tecnologie coinvolte, comprendente l'approfondimento dell'architettura ESP32, delle librerie grafiche per la realizzazione dell'interfaccia utente e delle modalità di comunicazione con i servizi software aziendali. Successivamente sono state affrontate le attività di progettazione dell'architettura della soluzione e della struttura del firmware, tenendo conto dei vincoli tipici dei sistemi embedded, quali risorse hardware limitate, affidabilità operativa e semplicità di configurazione.
+Lo scopo del progetto è duplice: da un lato, realizzare un firmware robusto e ottimizzato per dispositivi _embedded_ con rigidi vincoli di memoria e risorse grafiche; dall'altro, implementare una connettività affidabile tramite provisioning Wi-Fi, gestione della cache locale dei dati e sincronizzazione periodica con le API aziendali, garantendo la continuità operativa anche in condizioni di assenza di rete.
 
-Il documento presenta il contesto aziendale nel quale si colloca il progetto, descrive le metodologie adottate durante lo stage e approfondisce l'analisi dei requisiti funzionali e non funzionali del sistema. Vengono inoltre illustrate le principali scelte progettuali e implementative, con particolare attenzione agli aspetti relativi alla comunicazione con il CRM, alla gestione dell'interfaccia grafica e alla robustezza della soluzione. Infine, sono riportate le attività di verifica e validazione svolte, i risultati ottenuti e alcune possibili evoluzioni future del progetto.
-
-L'elaborato conclude con una valutazione complessiva dell'esperienza di stage e del contributo formativo e professionale derivato dallo svolgimento del progetto.
+Il testo è suddiviso in sette capitoli. Il primo capitolo introduce il contesto aziendale, gli obiettivi del progetto e la pianificazione complessiva dello stage. Il secondo capitolo descrive i processi, le metodologie di sviluppo adottate e le modalità di interazione e revisione con il tutor aziendale. Il terzo capitolo presenta l'analisi dei requisiti, l'analisi degli utenti e la modellazione dei casi d'uso. Il quarto capitolo illustra le scelte tecnologiche e i criteri adottati per lo sviluppo software ed _embedded_. Il quinto capitolo descrive l'architettura del firmware e l'implementazione dei moduli di connettività e provisioning. Il sesto capitolo approfondisce la realizzazione grafica dei pannelli, la gestione delle schermate e i meccanismi di robustezza, quali il _watchdog_ e la diagnostica locale. Infine, il settimo capitolo traccia le conclusioni, il consuntivo finale delle ore, i requisiti soddisfatti e le possibili evoluzioni future del progetto.
 \
+
 #pagebreak()
 = Ringraziamenti <ringraziamenti>
 
