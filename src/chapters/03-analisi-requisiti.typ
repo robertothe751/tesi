@@ -1,9 +1,21 @@
 #import "shared.typ": *
 
-/*
+
 #pagebreak()
 = Analisi dei requisiti <analisi-requisiti>
-
+\ 
+Il presente capitolo è dedicato all'analisi dei requisiti del sistema, attività essenziale per definire gli obiettivi funzionali e i vincoli progettuali della soluzione. Vengono illustrati gli attori coinvolti, i casi d'uso e i requisiti funzionali e non funzionali individuati durante la fase di studio. Le informazioni raccolte costituiscono il punto di partenza per le successive attività di progettazione e implementazione del sistema.
+\
+== Analisi degli utenti
+\
+Il sistema sviluppato nel contesto dello stage consiste in un dispositivo basato su ESP32, dotato di display e integrato con il CRM RelAi. Il suo scopo è mostrare in tempo reale informazioni relative a organizzazioni ed eventi, quali codici QR, contatori degli iscritti e dei partecipanti, prenotazioni e dati di stato del dispositivo.
+\
+L'utilizzo del sistema coinvolge un unico attore principale, identificato nell'utente dell'organizzazione cliente presso la quale il dispositivo viene installato. Tale soggetto è responsabile della configurazione iniziale del pannello, che comprende il collegamento alla rete Wi-Fi, l'associazione al CRM RelAi e la gestione delle principali impostazioni operative del dispositivo.
+\
+Una volta completata la fase di configurazione, l'utente interagisce con il sistema principalmente attraverso la consultazione delle informazioni visualizzate sul display. Pur essendo pensato per un utilizzo semplice e immediato, il dispositivo mette inoltre a disposizione strumenti di supporto alla manutenzione e alla diagnostica, utili per verificare lo stato della connessione, la corretta sincronizzazione dei dati e il funzionamento generale del sistema.
+\
+Poiché il progetto è destinato a contesti operativi nei quali gli utilizzatori potrebbero non possedere particolari competenze tecniche, l'interfaccia e i flussi di interazione sono stati progettati privilegiando chiarezza, semplicità di utilizzo e rapidità delle operazioni di configurazione e gestione. Tale approccio consente di ridurre la complessità percepita e di facilitare l'adozione del dispositivo presso le organizzazioni clienti.
+\ // fino a qua pensato, potenzialmente da riguardare
 == Casi d'uso
 Per lo studio dei casi di utilizzo del prodotto sono stati creati dei diagrammi. I diagrammi dei casi d'uso (_Use Case Diagram_) sono diagrammi di tipo _UML_ dedicati alla descrizione delle funzioni o servizi offerti da un sistema, cosi come sono percepiti dagli attori che interagiscono col sistema stesso.
 
@@ -41,4 +53,4 @@ Nelle tabelle seguenti sono riassunti i requisiti e il loro tracciamento con gli
 #requirement-table((
   ([RVO-1], [La libreria per l'esecuzione dei test automatici deve essere riutilizzabile], [-]),
 ), caption: [Tabella del tracciamento dei requisiti di vincolo.]) <tab-requisiti-vincolo>
-*/
+

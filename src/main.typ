@@ -112,9 +112,11 @@ Il testo è suddiviso in sette capitoli. Il primo capitolo introduce il contesto
 
 #include "chapters/01-introduzione.typ"
 #include "chapters/02-processi-metodologie.typ"
-#include "chapters/03-descrizione-stage.typ"
+#include "chapters/03-analisi-requisiti.typ"
+/*
 #include "chapters/04-analisi-requisiti.typ"
 #include "chapters/05-progettazione-codifica.typ"
 #include "chapters/06-verifica-validazione.typ"
 #include "chapters/07-conclusioni.typ"
 #include "chapters/08-bibliografia.typ"
+*/

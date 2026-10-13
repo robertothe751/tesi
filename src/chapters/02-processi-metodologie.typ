@@ -41,11 +41,10 @@ Per dimensionare correttamente il progetto rispetto alle trecento ore di stage e
 \
 === Requisiti Obbligatori (O) <requisiti-obbligatori>
 \
-- *O01 (Analisi e Progettazione):* Analizzare i requisiti dei pannelli informativi e progettare l'interfaccia del dispositivo, definendo i dati da mostrare, la frequenza di aggiornamento e i vincoli imposti dal display.
-- *O02 (Configurazione e Provisioning):* Realizzare la procedura di configurazione iniziale del dispositivo, comprendendo il provisioning della rete Wi-Fi tramite portale di configurazione, il salvataggio persistente delle impostazioni e la funzione di reset alle impostazioni di fabbrica.
-- *O03 (Integrazione CRM e API):* Sviluppare l'abbinamento del dispositivo al CRM RelAi e implementare il client verso le API aziendali, garantendo l'aggiornamento periodico dei dati e la cache locale dell'ultimo valore valido.
-- *O04 (Visualizzazione e Gestione Stati):* Visualizzare sul display il codice QR, il contatore degli iscritti, il contatore dei partecipanti e le prenotazioni dell'evento, implementando schermate dedicate per gestire gli stati di errore e l'assenza di rete.
-- *O05 (Validazione e Documentazione):* Eseguire test funzionali e di durata prolungata sul dispositivo, redigendo contestualmente la documentazione tecnica e la relazione finale di stage.
+- *O01 (Configurazione e Provisioning):* Realizzare la procedura di configurazione iniziale del dispositivo, comprendendo il provisioning della rete Wi-Fi tramite portale di configurazione, il salvataggio persistente delle impostazioni e la funzione di reset alle impostazioni di fabbrica.
+- *O02 (Integrazione CRM e API):* Sviluppare l'abbinamento del dispositivo al CRM RelAi e implementare il client verso le API aziendali, garantendo l'aggiornamento periodico dei dati e la cache locale dell'ultimo valore valido.
+- *O03 (Visualizzazione e Gestione Stati):* Visualizzare sul display il codice QR, il contatore degli iscritti, il contatore dei partecipanti e le prenotazioni dell'evento, implementando schermate dedicate per gestire gli stati di errore e l'assenza di rete.
+- *O04 (Robustezza e Affidabilità):* Garantire la stabilità operativa e l'affidabilità del dispositivo in condizioni d'uso prolungate, sottoponendo il sistema a rigorosi test funzionali e di stress prima della conclusione dello stage.
 \
 === Requisiti Desiderabili (D) <requisiti-desiderabili>
 \
@@ -74,7 +73,7 @@ In aggiunta ai momenti di confronto, il codice sorgente del firmware ESP32 è st
 \
 == Issue Tracking e Controllo di Versione <issue-tracking-e-controllo-di-versione>
 \
-Per il monitoraggio delle attività, la pianificazione operativa e la gestione centralizzata del codice sorgente, sono stati adottati strumenti open-source moderni ed efficienti, perfettamente integrati nei flussi di lavoro aziendali:
+Per il monitoraggio delle attività, la pianificazione operativa e la gestione centralizzata del codice sorgente, sono stati adottati strumenti open-source moderni ed efficenti, perfettamente integrati nei flussi di lavoro aziendali:
 \
 - *Controllo di versione:* La gestione del codice è stata affidata a *Gitea*, che ha ospitato i repository del progetto. Il flusso di lavoro è stato modellato attraverso l'uso di branch dedicati per singola funzionalità o correzione (`feature/`), l'apertura sistematica di _pull request_ mirate e la supervisione tramite code review. Questa organizzazione ha permesso di isolare le modifiche sperimentali, preservare la stabilità del ramo principale e mantenere una cronologia pulita e tracciabile di tutte le evoluzioni del software.
 - *Issue Tracking:* La tracciabilità e la pianificazione delle attività giornaliere e settimanali sono state gestite mediante la piattaforma *Plane*. Ogni requisito funzionale o correzione di bug è stato censito sotto forma di _issue_, suddiviso in task granulari e associato a specifiche etichette di priorità. Questo strumento ha consentito di monitorare visivamente lo stato di avanzamento delle 300 ore di stage, offrendo un riscontro immediato sul carico di lavoro corrente e facilitando la rendicontazione delle attività svolte.
@@ -86,43 +85,43 @@ Prima dell'avvio dello sviluppo, sono stati identificati i principali fattori di
 \ \
 
 - *Complessità di integrazione hardware-software e concorrenza:*
-  - *Descrizione:* La gestione simultanea del rendering grafico avanzato sul display e delle comunicazioni di rete asincrone con le API del CRM poteva generare colli di bottiglia o blocchi del microcontrollore.
-  - *Mitigazione:* Adozione di un'architettura software strutturata in task paralleli, separando la logica di rete dalle routine di aggiornamento grafico e sincronizzando l'accesso alle risorse condivise in modo sicuro.
-  - *Probabilità:* Media
-  - *Impatto:* Alto
+- *Descrizione:* La gestione simultanea del rendering grafico avanzato sul display e delle comunicazioni di rete asincrone con le API del CRM genera colli di bottiglia o blocchi del microcontrollore.
+- *Mitigazione:* Adozione di un'architettura software strutturata in task paralleli, separando la logica di rete dalle routine di aggiornamento grafico e sincronizzando l'accesso alle risorse condivise in modo sicuro.
+- *Probabilità:* Media
+- *Impatto:* Alto
 \ \
 
-- *Gestione delle risorse, vincoli di memoria e resilienza di rete:*
-  - *Descrizione:* I limiti fisici della memoria interna dell'ESP32 e la potenziale instabilità della connessione Wi-Fi in ambienti operativi reali.
-  - *Mitigazione:* Ottimizzazione dell'uso della memoria RAM attraverso il rilascio mirato dei buffer grafici non utilizzati e implementazione della cache locale per garantire la continuità d'uso in caso di disconnessione temporanea della rete.
-  - *Probabilità:* Media
-  - *Impatto:* Medio-Alto
+- *Esaurimento della memoria RAM e instabilità di rete:*
+- *Descrizione:* Si verificano errori a runtime di tipo _out of memory_ dovuti ai limiti fisici della memoria interna dell'ESP32, accompagnati da interruzioni operative prolungate in caso di instabilità o assenza della connessione Wi-Fi.
+- *Mitigazione:* Ottimizzazione dell'uso della memoria RAM attraverso il rilascio mirato dei buffer grafici non utilizzati e implementazione della cache locale per garantire la continuità d'uso in caso di disconnessione temporanea della rete.
+- *Probabilità:* Media
+- *Impatto:* Medio-Alto
 \ \
 
 - *Evoluzione o instabilità delle API del CRM:*
-  - *Descrizione:* Il rischio che modifiche impreviste agli endpoint o ai contratti delle API del sistema CRM esterno compromettessero la corretta ricezione e trasmissione dei dati.
-  - *Mitigazione:* Astrazione del layer di comunicazione di rete tramite interfacce modulari e implementazione di robusti controlli di validazione e gestione delle eccezioni sui payload in ingresso e in uscita.
-  - *Probabilità:* Bassa
-  - *Impatto:* Alto
+- *Descrizione:* Modifiche impreviste agli endpoint o ai contratti delle API del sistema CRM esterno compromettono la corretta ricezione e trasmissione dei dati.
+- *Mitigazione:* Astrazione del layer di comunicazione di rete tramite interfacce modulari e implementazione di robusti controlli di validazione e gestione delle eccezioni sui payload in ingresso e in uscita.
+- *Probabilità:* Bassa
+- *Impatto:* Alto
 \ \ 
 
 - *Prestazioni e fluidità dell'interfaccia grafica:*
-  - *Descrizione:* La visualizzazione di informazioni aggiornate in tempo reale e la gestione delle animazioni dell'interfaccia potrebbero causare rallentamenti o ridurre la reattività del sistema sui dispositivi ESP32.
-  - *Mitigazione:* Ottimizzazione dei componenti grafici, riduzione degli aggiornamenti non necessari e monitoraggio dell'utilizzo delle risorse durante le attività di sviluppo e test.
-  - *Probabilità:* Media
-  - *Impatto:* Medio
+- *Descrizione:* La visualizzazione di informazioni aggiornate in tempo reale e la gestione delle animazioni dell'interfaccia provocano rallentamenti o riducono la reattività del sistema sui dispositivi ESP32.
+- *Mitigazione:* Ottimizzazione dei componenti grafici, riduzione degli aggiornamenti non necessari e monitoraggio dell'utilizzo delle risorse durante le attività di sviluppo e test.
+- 
+- *Probabilità:* Media
+- *Impatto:* Medio
+
+- *Disallineamento dei requisiti funzionali per i pannelli:*
+- *Descrizione:* Interpretazioni errate delle specifiche dei pannelli informativi o delle modalità di interazione con i display vincolati da risorse limitate comportano lo sviluppo di funzionalità non conformi alle reali esigenze operative dell'organizzazione cliente.
+- *Mitigazione:* Gestione costante attraverso gli incontri periodici e regolari di allineamento e le sessioni di revisione con il tutor aziendale.
+- *Probabilità:* Bassa
+- *Impatto:* Medio
 \ \ 
 
-- *Disallineamento dei requisiti:*
-  - *Descrizione:* Il rischio di discostarsi dalle aspettative aziendali o di accumulare criticità non previste durante il ciclo di vita del prototipo.
-  - *Mitigazione:* Gestione costante attraverso gli incontri periodici e regolari di allineamento e le sessioni di revisione con il tutor aziendale.
-  - *Probabilità:* Bassa
-  - *Impatto:* Medio
-\ \ 
-
-- *Tempi di sviluppo superiori alle previsioni:*
-  - *Descrizione:* La complessità del progetto, l'apprendimento di nuove tecnologie embedded e la risoluzione di problematiche hardware e software potrebbero richiedere un numero di ore superiore a quanto inizialmente stimato.
-  - *Mitigazione:* Pianificazione incrementale delle attività, definizione delle priorità in funzione dei requisiti obbligatori e monitoraggio costante dell'avanzamento mediante incontri periodici con il tutor aziendale, così da individuare tempestivamente eventuali ritardi.
-  - *Probabilità:* Media
-  - *Impatto:* Medio-Alto
+- *Sforamento dei tempi di sviluppo:*
+- *Descrizione:* La curva di apprendimento legata alla programmazione embedded su ESP32, unita a criticità impreviste nell'interfacciamento con le API di RelAi, allunga i tempi di completamento delle attività previste dal cronoprogramma.
+- *Mitigazione:* Pianificazione incrementale delle attività, definizione delle priorità in funzione dei requisiti obbligatori e monitoraggio costante dell'avanzamento mediante incontri periodici con il tutor aziendale, così da individuare tempestivamente eventuali ritardi.
+- *Probabilità:* Media
+- *Impatto:* Medio-Alto
 \ \ 
