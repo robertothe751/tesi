@@ -6,7 +6,7 @@
 
         UC1.2 – Credenziali non valide
 
-    UC2 – Visualizzazione dei pannelli informativi a display
+    
 
     ////fino a qua fatto
 
@@ -18,11 +18,8 @@
 
     UC6 - Reset di sistema
 
-    ////////// fino a qua pensato dopo claudio
+    UC2 – Visualizzazione dei pannelli informativi a display
 
-    UC7 – Ripristino configurazione dispositivo
-
-    UC8 – Aggiornamento firmware OTA
 
 2 -> Trattazione dettagliata dei casi d'uso:
 
