@@ -20,26 +20,27 @@ Poiché il progetto è destinato a contesti operativi nei quali gli utilizzatori
 Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi e le relative specifiche funzionali. I diagrammi dei casi d'uso (_Use Case Diagram_) sono diagrammi di tipo _UML_ dedicati alla descrizione delle funzioni o servizi offerti dal sistema, così come sono percepiti dagli attori che interagiscono con esso.
 \
 === Elenco dei casi d'uso
-- 
-*UC1* – Configurazione Wi‑Fi
-- 
-*UC1.1* – Nessuna rete disponibile
-- 
-*UC1.2* – Credenziali non valide
-- 
-*UC3* – Consultazione stato del dispositivo
-- 
-*UC4* – Condivisione Wi-Fi tramite QR Code
-- 
-*UC5* – Riavvio del dispositivo
-- 
-*UC6* – Reset di sistema
-- 
-*UC2* – Visualizzazione dei pannelli informativi a display
+\
+- *UC1* – Configurazione Wi‑Fi
+\
+- *UC1.1* – Nessuna rete disponibile
+\
+- *UC1.2* – Credenziali non valide
+\
+- *UC2* – Visualizzazione dei pannelli informativi a display
+\
+- *UC3* – Consultazione stato del dispositivo
+\
+- *UC4* – Condivisione Wi-Fi tramite QR Code
+\
+- *UC5* – Riavvio del dispositivo
+\
+- *UC6* – Reset di sistema
+\
 \
 === Trattazione dettagliata dei casi d'uso
 
-#usecase(1, [Configurazione della connessione Wi‑Fi], [Utente / Installatore.], [
+#usecase(1, [Configurazione della connessione Wi‑Fi], [Utente], [
 - Il dispositivo ESP32 è acceso e correttamente alimentato.
 - Il Captive Portal è attivo.
 - L'utente è connesso alla rete generata dal dispositivo.
@@ -62,7 +63,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 - Il dispositivo è pronto per comunicare con le API del CRM RelAi.
 ]) <uc-config-wifi>
 \
-#usecase(1.1, [Nessuna rete disponibile], [Utente / Installatore.], [
+#usecase(1.1, [Nessuna rete disponibile], [Utente], [
 - Il dispositivo è acceso.
 - Il Captive Portal è attivo.
 - L'utente è connesso all'Access Point del dispositivo.
@@ -78,7 +79,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 - Il Captive Portal rimane disponibile.
 ]) <uc-wifi-nessuna-rete>
 \
-#usecase(1.2, [Credenziali non valide], [Utente / Installatore.], [
+#usecase(1.2, [Credenziali non valide], [Utente], [
 - È stata selezionata una rete Wi‑Fi.
 - Sono stati inseriti SSID e password.
 *Trigger:* Tentativo di connessione a una rete Wi‑Fi.
@@ -95,7 +96,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 - Il Captive Portal rimane disponibile.
 ]) <uc-wifi-credenziali-errate>
 \
-#usecase(3, [Consultazione stato del dispositivo], [Utente / Installatore.], [
+#usecase(3, [Consultazione stato del dispositivo], [Utente], [
 - Il dispositivo ESP32 è acceso e correttamente avviato.
 - L'interfaccia grafica e il menu di diagnostica sono accessibili.
 *Trigger:* L'utente seleziona la voce "Stato Sistema" dal menu touch locale.
@@ -110,7 +111,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 - Il sistema riprende la normale rotazione dei pannelli alla chiusura del modale.
 ]) <uc-consultazione-stato>
 \
-#usecase(4, [Condivisione Wi-Fi tramite QR Code], [Utente / Installatore.], [
+#usecase(4, [Condivisione Wi-Fi tramite QR Code], [Utente], [
 - Il dispositivo ESP32 è acceso e connesso a una rete Wi-Fi.
 - L'interfaccia grafica locale è attiva.
 *Trigger:* L'utente seleziona la voce "QR Condivisione Rete" dal menu touch locale.
@@ -126,7 +127,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 - Alla chiusura del modale, il sistema ripristina la visualizzazione operativa standard.
 ]) <uc-condivisione-wifi>
 \
-#usecase(5, [Riavvio del dispositivo], [Utente / Installatore.], [
+#usecase(5, [Riavvio del dispositivo], [Utente], [
 - Il dispositivo ESP32 è acceso e funzionante.
 - L'interfaccia grafica e il menu di diagnostica sono accessibili.
 *Trigger:* L'utente seleziona la voce "Riavvio ESP32" dal menu touch locale.
@@ -140,7 +141,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 - Il dispositivo viene riavviato pulitamente preservando le configurazioni e le preferenze salvate in memoria persistente.
 ]) <uc-riavvio-dispositivo>
 \
-#usecase(6, [Reset di sistema], [Utente / Installatore.], [
+#usecase(6, [Reset di sistema], [Utente], [
 - Il dispositivo ESP32 è acceso e operativo.
 - L'utente ha accesso al menu di diagnostica locale.
 *Trigger:* L'utente seleziona la voce di reset ("Reset Wi-Fi" o "Reset ESP32") dal menu touch locale.
@@ -155,7 +156,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 - Il dispositivo torna allo stato di configurazione iniziale con l'Access Point di provisioning attivo.
 ]) <uc-reset-sistema>
 \
-#usecase(2, [Visualizzazione dei pannelli informativi a display], [Utente / Installatore / Visore (Passivo).], [
+#usecase(2, [Visualizzazione dei pannelli informativi a display], [Utente], [
 - Il dispositivo ESP32 è alimentato e correttamente avviato.
 - Il display e il sistema grafico LVGL sono inizializzati.
 - Sono presenti dati validi in cache locale o ricevuti dalle API del CRM RelAi.
