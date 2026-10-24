@@ -26,7 +26,7 @@
     *Precondizioni:* #pre \
     *Descrizione:* #description \
     *Postcondizioni:* #post
-    if alternative != none [\
+    #if alternative != none [\
       *Scenario alternativo:* #alternative
     ]
   ]
