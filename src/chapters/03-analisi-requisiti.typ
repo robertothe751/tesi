@@ -91,8 +91,8 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 ], image-path: "../../img/use_cases/UC1.2_Credenziali_non_valide.png") <uc-wifi-credenziali-errate>
 \
 #usecase(2, [Consultazione diagnostica locale del dispositivo], [Utente], [
-- Il dispositivo ESP32 è acceso e correttamente avviato.
-- L'interfaccia grafica LVGL è attiva e il menu di diagnostica circolare è accessibile a schermo.
+- Il dispositivo ESP32 è operativo.
+- L'interfaccia grafica è operativo.
 *Trigger:* L'utente seleziona il pulsante "Stato Sistema" dal menu touch locale.
 ], [
 1. L'utente preme il pulsante di accesso allo stato dal menu touch del display.
@@ -102,7 +102,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 ], [
 - L'utente è informato sullo stato di salute e connettività locale del dispositivo.
 - Il sistema riprende la normale rotazione o visualizzazione dei pannelli alla chiusura del modale.
-]) <uc-consultazione-stato>
+], image-path: "../../img/use_cases/UC2_Consultazione_diagnostica_locale.png") <uc-consultazione-stato>
 \
 #usecase(3, [Consultazione stato e telemetria remota tramite CRM RelAi], [Utente], [
 - Il dispositivo ESP32 è connesso a Internet tramite Wi-Fi.
