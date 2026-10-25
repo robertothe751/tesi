@@ -96,8 +96,8 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 *Trigger:* L'utente seleziona il pulsante "Stato Sistema" dal menu touch locale.
 ], [
 1. L'utente preme il pulsante di accesso allo stato dal menu touch del display.
-2. Il sistema interroga i moduli di runtime e raccoglie i parametri correnti (SSID della rete connessa, stato della connessione, versione del firmware e tempo trascorso – _uptime_ / _elapsed_ – dall'ultima disconnessione).
-3. Il sistema apre un riquadro modale sovrapposto (_message box_) contenente le informazioni aggregate.
+2. Il sistema interroga i moduli di runtime e raccoglie i parametri correnti (SSID della rete connessa, stato della connessione, versione del firmware e tempo trascorso _uptime_ dall'ultima disconnessione).
+3. Il sistema apre una _message box_ contenente le informazioni aggregate.
 4. L'utente prende visione dei dati diagnostici e chiude la finestra modale tramite il pulsante di chiusura dedicato, ripristinando la schermata principale.
 ], [
 - L'utente è informato sullo stato di salute e connettività locale del dispositivo.
@@ -105,140 +105,141 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 ], image-path: "../../img/use_cases/UC2_Consultazione_diagnostica_locale.png") <uc-consultazione-stato>
 \
 #usecase(3, [Consultazione stato e telemetria remota tramite CRM RelAi], [Utente], [
+- Il dispositivo ESP32 è operativo.
 - Il dispositivo ESP32 è connesso a Internet tramite Wi-Fi.
-- Il servizio di heartbeat periodico e il client HTTPS/WebSocket verso il CRM RelAi sono attivi.
-*Trigger:* Scadenza del timer periodico di heartbeat o richiesta esplicita dal pannello di controllo cloud.
+- Il dispositivo ESP32 e connesso al CRM RelAi .
+*Trigger:* L'utente desidera verificare lo stato di salute, la connettività o le metriche di un dispositivo dal pannello di controllo cloud.
 ], [
-1. Il dispositivo invia periodicamente una richiesta HTTP POST (`heartbeat`) contenente i dati di telemetria (indirizzo MAC, tipo dispositivo, versione software, _uptime_, memoria _heap_ libera e RSSI del Wi-Fi).
-2. Il server CRM RelAi riceve e registra i dati di stato aggiornati del dispositivo.
-3. L'utente accede alla piattaforma cloud per monitorare la telemetria e la connettività del display da remoto.
+1. L'utente accede alla sezione di monitoraggio dei dispositivi all'interno della piattaforma CRM RelAi.
+2. Il sistema cloud interroga i dati di telemetria più recenti memorizzati dal dispositivo (tra cui versione software, _uptime_ e RSSI del Wi-Fi).
+3. L'interfaccia della piattaforma CRM elabora le informazioni e mostra all'utente la panoramica aggiornata sullo stato di salute e connettività del display.
 ], [
-- La piattaforma cloud mantiene traccia in tempo reale dello stato operativo e della telemetria del dispositivo.
-- Il sistema restituisce al dispositivo l'intervallo di aggiornamento aggiornato e la lista degli eventi correnti.
-]) <uc-consultazione-remota>
+- L'utente ottiene una visione centralizzata e aggiornata dello stato operativo del dispositivo da remoto.
+- La piattaforma cloud mantiene traccia delle metriche telemetriche ricevute.
+], image-path: "../../img/use_cases/UC3_Consultazione_diagnostica_remota.png") <uc-consultazione-remota>
 \
 #usecase(4, [Condivisione Wi-Fi tramite QR Code], [Utente], [
 - Il dispositivo ESP32 è acceso ed è connesso a una rete Wi-Fi.
-- L'interfaccia grafica touch locale è attiva.
-*Trigger:* L'utente seleziona il pulsante "QR Rete" dal menu di diagnostica locale.
+*Trigger:* L'utente seleziona il pulsante "QR Rete" dal menu di diagnostica locale per contividere i dati di accesso alla rete .
 ], [
-1. L'utente accede al menu diagnostico sul display e seleziona la condivisione della rete.
-2. Il sistema recupera l'SSID e la chiave di rete (`WiFi.SSID()` e `WiFi.psk()`).
-3. Il sistema formatta stringa secondo lo standard di connessione mobile (`WIFI:S:...;T:WPA;P:...;;`).
-4. Il sistema genera dinamicamente un codice QR e lo renderizza a schermo all'interno di una finestra modale dedicata.
-5. Un dispositivo esterno (es. smartphone) scansiona il codice a barre bidimensionale per connettersi rapidamente alla medesima rete.
+1. L'utente accede al menu sul display e seleziona la condivisione della rete.
+2. Il sistema recupera l'SSID e la chiave di rete.
+3. Il sistema formatta la stringa secondo lo standard di connessione mobile.
+4. Il sistema genera dinamicamente un codice QR e lo renderizza a schermo all'interno di una _message box_ edicata.
+5. Un dispositivo esterno scansiona il codice QR per connettersi rapidamnte alla medesima rete.
 6. L'utente chiude il modale al termine dell'operazione.
 ], [
 - Il codice QR con le credenziali correnti risulta visibile a schermo.
 - Alla chiusura del modale, viene ripristinata la visualizzazione operativa standard e riattivato il timer di rotazione.
-]) <uc-condivisione-wifi>
+], image-path: "../../img/use_cases/UC4_Condivisione_Wi-Fi_QR.png") <uc-condivisione-wifi>
 \
 #usecase(5, [Riavvio locale del dispositivo], [Utente], [
 - Il dispositivo ESP32 è operativo.
-- L'utente ha accesso al menu touch locale di diagnostica.
+- L'interfaccia grafica è operativo.
 *Trigger:* L'utente seleziona il tasto "Riavvio ESP32" sul display.
 ], [
 1. L'utente seleziona l'opzione di riavvio dal menu locale touch.
 2. Il sistema avvia un timer temporizzato di sicurezza per la chiusura ordinata dei task.
-3. Il sistema esegue il comando software di riavvio (`ESP.restart()`).
+3. Il sistema esegue il comando software di riavvio.
 4. Il microcontrollore si riavvia ricaricando il firmware e ripristinando le periferiche e le connessioni di rete.
 ], [
 - Il dispositivo viene riavviato pulitamente preservando le configurazioni e le preferenze salvate in memoria persistente NVS.
-]) <uc-riavvio-locale>
+], image-path: "../../img/use_cases/UC5_Riavvio_locale.png") <uc-riavvio-locale>
 \
 #usecase(6, [Riavvio remoto del dispositivo], [Utente], [
-- Il dispositivo ESP32 è acceso e connesso alla rete.
-- Il canale di comunicazione WebSocket con il CRM RelAi è attivo.
+- Il dispositivo ESP32 è operativo.
+- Il dispositivo ESP32 è connesso a Internet tramite Wi-Fi.
+- Il dispositivo ESP32 e connesso al CRM RelAi .
 *Trigger:* L'utente invia un comando di riavvio remoto dalla piattaforma cloud CRM RelAi.
 ], [
-1. Il sistema riceve un payload JSON tramite WebSocket contenente il comando di riavvio (`action: "restart"`).
+1. Il sistema riceve un payload JSON tramite WebSocket contenente il comando di riavvio.
 2. Il sistema elabora il comando remoto e avvia la procedura di chiusura delle attività in corso.
-3. Il microcontrollore esegue il comando di reboot software (`ESP.restart()`).
+3. Il microcontrollore esegue il comando di riavvio software.
 4. Il dispositivo si riavvia da remoto ricaricando il firmware.
 ], [
 - Il dispositivo viene riavviato da remoto preservando le configurazioni salvate in memoria persistente NVS.
-]) <uc-riavvio-remoto>
+], image-path: "../../img/use_cases/UC6_Riavvio_remoto.png") <uc-riavvio-remoto>
 \
 #usecase(7, [Reset di sistema locale], [Utente], [
 - Il dispositivo ESP32 è acceso e operativo.
-- L'utente ha accesso al menu touch di diagnostica locale.
 *Trigger:* L'utente seleziona il tasto "Reset ESP32" dal display.
 ], [
 1. L'utente seleziona l'opzione di reset di fabbrica dal menu locale.
-2. Il sistema avvia la procedura di cancellazione dei namespace di configurazione nella memoria flash (`wifi-config`, `api-cache` e `esp-settings`).
+2. Il sistema avvia la procedura di cancellazione dei namespace di configurazione nella memoria flash.
 3. Il sistema disconnette le interfacce di rete e azzera le preferenze salvate.
-4. Il sistema esegue il riavvio automatico del microcontrollore (`ESP.restart()`).
+4. Il sistema esegue il riavvio automatico del microcontrollore.
 5. Al nuovo avvio, il dispositivo si presenta nello stato iniziale di fabbrica con l'Access Point di provisioning attivo.
 ], [
 - Tutti i dati salvati, le preferenze di rete e la cache locale risultano completamente cancellati.
 - Il dispositivo torna allo stato di configurazione iniziale pronto per una nuova associazione.
-]) <uc-reset-locale>
+], image-path: "../../img/use_cases/UC7_Reset_locale.png") <uc-reset-locale>
 \
 #usecase(8, [Reset di sistema remoto], [Utente], [
-- Il dispositivo ESP32 è connesso al server remoto.
-- Il canale WebSocket con il CRM RelAi è stabilito.
+- Il dispositivo ESP32 è operativo.
+- Il dispositivo ESP32 è connesso a Internet tramite Wi-Fi.
+- Il dispositivo ESP32 e connesso al CRM RelAi .
 *Trigger:* L'utente invia un comando di reset di fabbrica dalla piattaforma cloud CRM RelAi.
 ], [
-1. Il sistema riceve un payload JSON tramite WebSocket contenente il comando di reset (`action: "reset"`).
-2. Il sistema avvia la procedura di cancellazione remota dei dati nei namespace di configurazione presenti nella memoria flash (`wifi-config` e `api-cache`).
+1. Il sistema riceve un payload JSON tramite WebSocket contenente il comando di reset.
+2. Il sistema avvia la procedura di cancellazione remota dei dati nei namespace di configurazione presenti nella memoria flash.
 3. Il sistema ripulisce le preferenze e interrompe le interfacce di rete.
 4. Il sistema esegue il riavvio automatico del dispositivo portandolo allo stato iniziale di fabbrica.
 ], [
 - Tutte le preferenze e i dati memorizzati in precedenza risultano cancellati da remoto.
 - Il dispositivo torna allo stato di configurazione iniziale con l'Access Point di provisioning attivo.
-]) <uc-reset-remoto>
+], image-path: "../../img/use_cases/UC8_Reset_remoto.png") <uc-reset-remoto>
 \
-#usecase(9, [Sincronizzazione e gestione remota tramite CRM RelAi], [Utente], [
-- Il dispositivo è connesso alla rete Wi-Fi e alle API del CRM.
-- I servizi di heartbeat HTTP e i canali WebSocket (Pusher) sono inizializzati e sottoscritti.
-*Trigger:* Risposta positiva a un heartbeat periodico o ricezione di un evento di aggiornamento in tempo reale sul canale WebSocket.
+#usecase(9, [Aggiornamento remoto dei dati tramite CRM RelAi], [Utente], [
+- Il dispositivo ESP32 è operativo.
+- Il dispositivo ESP32 è connesso a Internet tramite Wi-Fi.
+- Il dispositivo ESP32 e connesso al CRM RelAi .
+*Trigger:* Ricezione di un evento di aggiornamento in tempo reale sul canale WebSocket.
 ], [
-1. Il sistema riceve i dati di configurazione aggiornati (come l'intervallo di rotazione dei pannelli `rotation_interval_seconds`) e la lista aggiornata degli eventi dal server.
+1. Il sistema riceve i dati di configurazione aggiornati e la lista aggiornata degli eventi dal server.
 2. Il modulo di gestione dati elabora il payload JSON ricevuto e verifica se vi sono variazioni rispetto alla cache corrente.
-3. Se i dati differiscono, il sistema salva i nuovi eventi nella memoria persistente NVS (namespace `api-cache`).
-4. Il sistema invia un segnale interno di aggiornamento (`ui_richiedi_ricarica_tileview`) per ricostruire dinamicamente le schermate informative.
+3. Se i dati differiscono, il sistema salva i nuovi eventi nella memoria persistente NVS.
+4. Il sistema invia un segnale interno di aggiornamento  per ricostruire dinamicamente le schermate informative.
 ], [
 - Le schermate informative, i dati degli eventi e i parametri di rotazione si aggiornano dinamicamente in base alle direttive del CRM RelAi.
-]) <uc-config-crm>
+], image-path: "../../img/use_cases/UC9_aggiornamento_remoto_dati.png") <uc-config-crm>
 \
 #usecase(9.1, [Gestione del fallback in assenza di connettività], [Utente], [
-- Il dispositivo si trova in uno stato di disconnessione temporanea dalla rete o il server remoto/ngrok risulta irragiungibile.
-*Trigger:* Fallimento di una richiesta HTTP di heartbeat o disconnessione del socket WebSocket.
+- Il dispositivo si trova in uno stato di assenza temporanea di connessione della rete o il server CRM RelAi risulta irragiungibile.
+*Trigger:* Fallimento di una richiesta di aggiornamento dei dati in tempo reale.
 ], [
 1. Il sistema rileva il fallimento della comunicazione di rete o l'assenza prolungata di connettività.
-2. Il gestore delle API intercetta l'eccezione bloccando i tentativi non necessari e prevenendo la frammentazione della memoria RAM (`heap`).
-3. Il sistema legge in modo trasparente i dati precedentemente memorizzati nella cache persistente locale (`api-cache`).
+2. Il gestore delle API intercetta l'eccezione bloccando i tentativi non necessari e prevenendo la frammentazione della memoria RAM.
+3. Il sistema legge in modo trasparente i dati precedentemente memorizzati nella cache persistente locale.
 4. L'interfaccia grafica continua a mostrare l'ultimo stato valido degli eventi senza causare blocchi o riavvii anomali del display.
 5. Il sistema avvia una procedura di tentativi schedulati di riconnessione in background.
 ], [
 - Il dispositivo garantisce la continuità operativa in modalità _offline_ (fallback) sfruttando la cache locale.
 - Il sistema riprende la sincronizzazione automatica non appena la connettività di rete viene ristabilita.
-]) <uc-errore-crm>
+], image-path: "../../img/use_cases/UC9.1_Assenza_connettività_aggiornamento_remoto_dati.png") <uc-errore-crm>
 \
 #usecase(10, [Navigazione tra le schermate informative], [Utente], [
-- Il dispositivo ESP32 è acceso e mostra le schermate degli eventi o il menu principale.
-- La rotazione automatica e la barra di navigazione laterale/inferiore touch sono attive.
+- Il dispositivo ESP32 è operativo.
+- Il dispositivo ESP32 ha dei dati salvati da mostrare.
 *Trigger:* Pressione dei pulsanti touch di navigazione o scadenza del timer di rotazione automatica; triplo tocco sullo schermo per abilitare/disabilitare la rotazione.
 ], [
-1. Il sistema gestisce la rotazione automatica delle pagine in base al timer configurato (es. ogni 30 secondi), oppure l'utente interagisce premendo i pulsanti freccia sulla barra di navigazione.
-2. Il sistema esegue l'animazione di transizione tra la schermata corrente e la successiva (gestendo la coda dei passi di navigazione ed evitando sovrapposizioni di rendering).
+1. Il sistema gestisce la rotazione automatica delle pagine in base al timer configurato (default 30 secondi, impostato remoto da CRM RelAi), oppure l'utente interagisce premendo i pulsanti freccia sulla barra di navigazione.
+2. Il sistema esegue l'animazione di transizione tra la schermata corrente e la successiva.
 3. L'utente visualizza la nuova schermata informativa o la pagina del menu diagnostico.
 ], [
 - L'interfaccia grafica risponde fluidamente ai comandi di navigazione manuale o automatica.
 - Lo stato della rotazione (attiva o in pausa) viene aggiornato visivamente sui pulsanti di controllo.
-]) <uc-navigazione-schermate>
+], image-path: "../../img/use_cases/UC10_Navigazione_schermate_informative.png") <uc-navigazione-schermate>
 \
 #usecase(11, [Visualizzazione dei dati nei pannelli informativi a display], [Utente], [
-- Il dispositivo ESP32 è alimentato e correttamente avviato.
-- Il display AMOLED e il sistema grafico LVGL sono inizializzati con i rispettivi buffer in memoria.
-- Sono presenti dati validi in cache locale o ricevuti dalle API del CRM RelAi.
-*Trigger:* Completamento dell'avvio del dispositivo, ricezione di nuovi dati o transizione del timer di pagina.
+- Il dispositivo ESP32 è operativo.
+- Il dispositivo ESP32 ha dei dati salvati da mostrare.
+*Trigger:* Completamento dell'avvio del dispositivo e ricezione di nuovi dati.
 ], [
-1. Il sistema esegue il rendering grafico dei pannelli degli eventi strutturati a schede (_tileview_).
-2. Ciascun pannello mostra a schermo le informazioni principali dell'evento (identificativo ID, nome dell'evento, contatore delle prenotazioni e dei partecipanti).
+1. Il sistema esegue il rendering grafico dei pannelli degli eventi strutturati a schede.
+2. Ciascun pannello mostra a schermo le informazioni principali dell'evento (nome dell'evento, contatore delle prenotazioni e dei partecipanti).
 3. Il sistema genera e mostra la tile laterale associata contenente il codice QR dinamico di riferimento per l'evento.
 4. L'utente consulta visivamente le informazioni o interagisce con il touch screen.
 ], [
 - I dati aggiornati dell'evento risultano correttamente renderizzati e visibili a schermo con elevata fluidità visiva.
 - Il sistema mantiene la rotazione attiva in base alle impostazioni correnti.
-]) <uc-visualizzazione-display>
+], image-path: "../../img/use_cases/UC11_Visualizzazione_dati_display.png") <uc-visualizzazione-display>

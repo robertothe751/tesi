@@ -108,7 +108,6 @@ Prima dell'avvio dello sviluppo, sono stati identificati i principali fattori di
 - *Prestazioni e fluidità dell'interfaccia grafica:*
 - *Descrizione:* La visualizzazione di informazioni aggiornate in tempo reale e la gestione delle animazioni dell'interfaccia provocano rallentamenti o riducono la reattività del sistema sui dispositivi ESP32.
 - *Mitigazione:* Ottimizzazione dei componenti grafici, riduzione degli aggiornamenti non necessari e monitoraggio dell'utilizzo delle risorse durante le attività di sviluppo e test.
-- 
 - *Probabilità:* Media
 - *Impatto:* Medio
 
