@@ -18,10 +18,14 @@
   sem. Nulla consequat massa quis enim.
 ]
 
-#let usecase(id, title, actors, pre, description, post, alternative: none) = {
+#let usecase(id, title, actors, pre, description, post, alternative: none, image-path: none) = {
   block(spacing: 1em)[
     *UC #id: #title*
-    \
+    #if image-path != none [
+      \ #align(center)[#image(image-path, width: 100%)] \
+    ] else [
+      \
+    ]
     *Attori principali:* #actors \
     *Precondizioni:* #pre \
     *Descrizione:* #description \

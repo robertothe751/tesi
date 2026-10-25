@@ -39,9 +39,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 === Descrizione dettagliata dei casi d'uso
 
 #usecase(1, [Configurazione della connessione Wi‑Fi], [Utente], [
-- Il dispositivo ESP32 è acceso e correttamente alimentato.
-- Il Captive Portal è attivo.
-- L'utente è connesso alla rete generata dal dispositivo.
+- Il dispositivo ESP32 è operativo.
 - È disponibile almeno una rete Wi‑Fi nelle vicinanze.
 *Trigger:* L'utente desidera configurare o aggiornare i parametri di accesso alla rete Wi‑Fi del dispositivo.
 ], [
@@ -59,11 +57,11 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 - Le credenziali della rete Wi‑Fi sono memorizzate nella memoria persistente del dispositivo.
 - Il dispositivo risulta connesso alla rete selezionata.
 - Il dispositivo è pronto per comunicare con le API del CRM RelAi.
-]) <uc-config-wifi>
+], image-path: "../../img/use_cases/UC1_Configurazione_wifi.png") <uc-config-wifi>
 \
 #usecase(1.1, [Nessuna rete disponibile], [Utente], [
-- Il dispositivo è acceso in modalità di provisioning.
-- Il Captive Portal è attivo.
+- Il dispositivo ESP32 è acceso con il Captive Portal attivo
+- L'utente è connesso alla rete generata dal dispositivo.
 *Trigger:* Avvio della scansione delle reti Wi‑Fi senza la presenza di punti d'accesso validi nel raggio d'azione.
 ], [
 1. L'utente accede alla pagina di configurazione Wi‑Fi.
@@ -74,7 +72,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 ], [
 - Nessuna configurazione Wi‑Fi viene salvata.
 - Il Captive Portal e l'Access Point rimangono disponibili per un nuovo tentativo.
-]) <uc-wifi-nessuna-rete>
+], image-path: "../../img/use_cases/UC1.1_Nessuna_rete_disponibile.png") <uc-wifi-nessuna-rete>
 \
 #usecase(1.2, [Credenziali non valide], [Utente], [
 - È stata selezionata una rete Wi‑Fi.
@@ -90,7 +88,7 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 ], [
 - Nessuna credenziale errata viene salvata come configurazione stabile.
 - Il portale di configurazione rimane attivo per consentire la correzione dei dati.
-]) <uc-wifi-credenziali-errate>
+], image-path: "../../img/use_cases/UC1.2_Credenziali_non_valide.png") <uc-wifi-credenziali-errate>
 \
 #usecase(2, [Consultazione diagnostica locale del dispositivo], [Utente], [
 - Il dispositivo ESP32 è acceso e correttamente avviato.
