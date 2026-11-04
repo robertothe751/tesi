@@ -15,7 +15,6 @@ L'utilizzo del sistema coinvolge un unico attore principale, identificato nell'u
 Una volta completata la fase di configurazione, l'utente interagisce con il sistema attraverso la visualizzazione ciclica o manuale dei pannelli informativi a display e l'utilizzo di un menu diagnostico touch locale per operazioni di manutenzione (riavvio, reset, condivisione QR). Parallelamente, il sistema dialoga con il cloud per ricevere aggiornamenti in tempo reale tramite WebSocket.
 \
 Poiché il progetto è destinato a contesti operativi nei quali gli utilizzatori potrebbero non possedere particolari competenze tecniche, l'interfaccia e i flussi di interazione sono stati progettati privilegiando chiarezza, semplicità di utilizzo e rapidità delle operazioni di configurazione e gestione. Tale approccio consente di ridurre la complessità percepita e di facilitare l'adozione del dispositivo presso le organizzazioni clienti.
-\
 == Casi d'uso
 Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi e le relative specifiche funzionali. I diagrammi dei casi d'uso (_Use Case Diagram_) sono diagrammi di tipo _UML_ dedicati alla descrizione delle funzioni o servizi offerti dal sistema, così come sono percepiti dagli attori che interagiscono con esso.
 \
@@ -243,3 +242,62 @@ Per lo studio dei casi di utilizzo del prodotto sono stati definiti i diagrammi 
 - I dati aggiornati dell'evento risultano correttamente renderizzati e visibili a schermo con elevata fluidità visiva.
 - Il sistema mantiene la rotazione attiva in base alle impostazioni correnti.
 ], image-path: "../../img/use_cases/UC11_Visualizzazione_dati_display.png") <uc-visualizzazione-display>
+
+\
+== Requisiti del sistema e stato di completamento <requisiti-del-sistema>
+
+La definizione dei requisiti costituisce il fondamento dell'intero processo di progettazione del sistema. A partire dall'analisi del contesto aziendale, delle esigenze dei clienti e delle criticità tecniche legate all'hardware ESP32, sono stati individuati i requisiti funzionali, non funzionali e di vincolo necessari a garantire la corretta operatività del prototipo. L'obiettivo principale è stato la realizzazione di una soluzione in grado di mostrare informazioni rilevanti in modo affidabile, semplice e immediatamente leggibile, mantenendo un elevato livello di robustezza anche in condizioni di rete instabile o in presenza di aggiornamenti intermittenti da parte del sistema centrale.
+
+In fase di sviluppo, tutti i requisiti individuati sono stati verificati in modo diretto e progressivo, con riferimento ai casi d'uso precedentemente definiti, alle attività di integrazione con RelAi e ai test eseguiti sul dispositivo. L'esito di questa valutazione ha confermato la completezza del sistema rispetto alle esigenze inizialmente dichiarate. Di conseguenza, il livello di copertura dei requisiti può essere considerato pienamente soddisfatto.
+
+=== Requisiti funzionali e stato di attuazione <requisiti-funzionali>
+
+I requisiti funzionali definiscono le capacità che il sistema deve mettere a disposizione dell'organizzazione cliente e dell'utente finale. Essi riguardano in particolare la configurazione del dispositivo, la lettura dei dati di evento, la visualizzazione dei contenuti sul display e la gestione delle operazioni di manutenzione.
+
+#table(
+  // Utilizziamo 1fr per la colonna centrale in modo che occupi tutto lo spazio rimanente in larghezza
+  columns: (2cm, 1fr, 3.2cm),
+  inset: 8pt,
+  stroke: 0.5pt + rgb("b8b8bd"),
+  fill: (_, row) => if calc.odd(row) { rgb("f5f5f7") } else { white },
+  table.header([*Codice*], [*Requisito*], [*Stato*]),
+  [RF01], [Configurazione iniziale della connessione Wi‑Fi tramite portale locale e salvataggio persistente delle credenziali.], [Completato],
+  [RF02], [Abbinamento del dispositivo a RelAi e ricezione delle informazioni di configurazione e degli eventi.], [Completato],
+  [RF03], [Visualizzazione sul display dei pannelli informativi relativi a iscritti, partecipanti, prenotazioni e codice QR.], [Completato],
+  [RF04], [Rotazione automatica e navigazione manuale tra le schermate informative.], [Completato],
+  [RF05], [Diagnostica locale del dispositivo con informazioni sullo stato della rete, dell'uptime e del firmware.], [Completato],
+  [RF06], [Operazioni di manutenzione come riavvio, reset e condivisione della rete tramite QR Code.], [Completato],
+  [RF07], [Gestione di fallback e cache locale in caso di assenza o instabilità della rete.], [Completato],
+  [RF08], [Configurazione remota dei pannelli e della frequenza di aggiornamento da parte del CRM RelAi.], [Completato],
+)
+#align(center)[#emph([Tabella 3.1 - Requisiti funzionali e stato di completamento.])]
+
+=== Requisiti non funzionali, di qualità e vincolo <requisiti-qualita-vincolo>
+
+I requisiti non funzionali descrivono le caratteristiche di qualità che un sistema embedded deve possedere per essere efficiente, affidabile e facilmente gestibile anche in contesti operativi reali. Tra questi, le criticità più rilevanti riguardano la stabilità del firmware, la reattività dell'interfaccia, l'usabilità del processo di configurazione e la sostenibilità del sistema sul lungo periodo.
+
+#table(
+  // Anche qui usiamo 1fr per distribuire uniformemente lo spazio orizzontale disponibile
+  columns: (2.2cm, 1fr, 3.2cm),
+  inset: 8pt,
+  stroke: 0.5pt + rgb("b8b8bd"),
+  fill: (_, row) => if calc.odd(row) { rgb("f5f5f7") } else { white },
+  table.header([*Codice*], [*Requisito*], [*Stato*]),
+  [RNF01], [Affidabilità del sistema in presenza di disconnessioni temporanee e timeout nelle chiamate verso il CRM.], [Completato],
+  [RNF02], [Robustezza del firmware con gestione degli errori, riconnessione automatica e recupero dalla cache locale.], [Completato],
+  [RNF03], [Prestazioni adeguate per il rendering delle schermate e aggiornamento dei dati in tempo reale.], [Completato],
+  [RNF04], [Usabilità delle operazioni locali per utenti non esperti, con procedure di approccio semplici e trasparenti.], [Completato],
+  [RNF05], [Manutenibilità del codice e separazione dei moduli per facilitare aggiornamenti e test futuri.], [Completato],
+  [RV01], [Esecuzione del sistema su piattaforma ESP32 con vincoli di memoria, potenza computazionale e rendering.], [Completato],
+  [RV02], [Integrazione con l'ecosistema RelAi e compatibilità con i dati e i protocolli aziendali.], [Completato],
+  [RV03], [Possibilità di configurazione del dispositivo anche senza accesso a internet tramite modalità locale.], [Completato],
+)
+#align(center)[#emph([Tabella 3.2 - Requisiti non funzionali e di vincolo.])]
+
+=== Conclusione sulla soddisfazione dei requisiti <conclusione-requisiti>
+
+Dall'analisi condotta durante lo stage emerge che tutti i requisiti inizialmente individuati sono stati soddisfatti in modo completo, sia nei loro aspetti funzionali sia in quelli di qualità e di vincolo. La soluzione ottenuta dimostra quindi la validità dell'approccio progettuale adottato, confermando che il dispositivo embedded può essere integrato efficacemente con il CRM RelAi e utilizzare le risorse hardware disponibili in modo sostenibile ed efficiente.
+
+In particolare, il sistema raggiunge l'obiettivo di trasformare dati aziendali complessi in informazioni facilmente leggibili e accessibili direttamente presso le sedi degli utenti, riducendo l'interazione richiesta e migliorando la fruibilità dell'informazione. La raggiunta completezza dei requisiti rappresenta inoltre una base solida per eventuali sviluppi futuri, come nuove tipologie di pannelli, aggiornamenti OTA o integrazioni con flussi dati ancora più avanzati.
+\
+#pagebreak()
