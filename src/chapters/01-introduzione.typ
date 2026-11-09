@@ -54,9 +54,7 @@ Il piano di attività ha una durata complessiva di 300 ore, suddivise indicativa
 - Il *terzo capitolo* presenta l'analisi degli utenti, i casi d'uso e i requisiti del sistema.
 - Il *quarto capitolo* descrive le tecnologie hardware e software utilizzate per lo sviluppo del prototipo.
 - Il *quinto capitolo* tratta la progettazione architetturale e la codifica del firmware ESP32.
-- Il *sesto capitolo* descrive le attività di verifica, validazione e testing sul campo.
-- Il *settimo capitolo* riassume i risultati conseguiti e le conclusioni.
-- L’*ottavo capitolo* raccoglie la bibliografia e i riferimenti sitografici.
+- La sezione finale raccoglie i riferimenti bibliografici e sitografici.
 \
 Gli acronimi sono sciolti alla prima occorrenza e i termini tecnici o stranieri sono evidenziati in _corsivo_.
 \
