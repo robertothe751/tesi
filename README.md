@@ -13,7 +13,6 @@
 ## Compilazione
 
 Installa [Typst](https://typst.app/) e dalla radice della repo esegui:
-
 ```sh
 typst compile --root . src/main.typ tesi.pdf
 ```
