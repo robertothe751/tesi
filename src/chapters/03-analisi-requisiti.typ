@@ -255,7 +255,6 @@ In fase di sviluppo, tutti i requisiti individuati sono stati verificati in modo
 I requisiti funzionali definiscono le capacità che il sistema deve mettere a disposizione dell'organizzazione cliente e dell'utente finale. Essi riguardano in particolare la configurazione del dispositivo, la lettura dei dati di evento, la visualizzazione dei contenuti sul display e la gestione delle operazioni di manutenzione.
 
 #table(
-  // Utilizziamo 1fr per la colonna centrale in modo che occupi tutto lo spazio rimanente in larghezza
   columns: (2cm, 1fr, 3.2cm),
   inset: 8pt,
   stroke: 0.5pt + rgb("b8b8bd"),

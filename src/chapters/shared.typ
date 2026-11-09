@@ -57,3 +57,46 @@
     align(center)[#emph(caption)]
   }
 }
+
+#set raw(theme: none)
+#set raw(theme: auto)
+
+#show raw.line: line => {
+  grid(
+    columns: (2.2em, 1fr),
+    column-gutter: 0.8em,
+    align: (right, left),
+    text(size: 8pt, fill: rgb("#858b95"))[#line.number],
+    line.body,
+  )
+}
+
+#let code-style(body) = {
+  show figure.where(kind: raw): set block(breakable: true)
+
+  show raw.where(block: true): it => block(
+    width: 100%,
+    fill: rgb("#f7f7f8"),
+    stroke: 0.8pt + rgb("#c8cbd0"),
+    radius: 7pt,
+    inset: (x: 12pt, y: 10pt),
+    {
+      set text(font: "DejaVu Sans Mono", size: 8.5pt)
+      set par(justify: false)
+      grid(
+        columns: (2.2em, 1fr),
+        column-gutter: 0.8em,
+        row-gutter: 0.6em,
+        align: (right, left),
+        ..it.lines
+          .map(l => (
+            text(size: 8pt, fill: rgb("#858b95"))[#l.number],
+            l.body,
+          ))
+          .flatten(),
+      )
+    },
+  )
+
+  body
+}

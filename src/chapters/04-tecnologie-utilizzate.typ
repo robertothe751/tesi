@@ -9,12 +9,13 @@ La soluzione è stata sviluppata in C++ per microcontrollori della famiglia ESP3
 \
 == Piattaforma hardware <piattaforma-hardware>
 \
-Il dispositivo principale del prototipo è basato su ESP32-S3 ed è abbinato a un display rotondo da 1,75 pollici. Nel codice, questa configurazione sfrutta le specifiche impostazioni di pinout e driver ottimizzate per il chip, gestendo l'interazione touch e la visualizzazione delle informazioni di stato, contatori e codici QR attraverso la libreria grafica.
+Il dispositivo principale del prototipo è basato su ESP32-S3 ed è abbinato a un display rotondo da 1,75 pollici. Questa configurazione è stata scelta per realizzare un pannello compatto, dotato di interazione touch e adatto alla visualizzazione delle informazioni sintetiche previste dai casi d'uso, come contatori, stato del dispositivo e codici QR.
 \
-In coerenza con il requisito di supporto a più tipologie di display, l'architettura software gestisce tramite PlatformIO e direttive di compilazione condizionale (o ambienti separati) anche una seconda scheda basata su ESP32-S3, abbinata a un display quadrato da 1,8 pollici. Questa separazione consente di mantenere un codice comune per la logica applicativa e le schermate LVGL, differenziando unicamente i driver di inizializzazione dello schermo e delle periferiche specifiche.
+In coerenza con il requisito facoltativo di supporto a più tipologie di display, è stata inoltre utilizzata una seconda scheda ESP32 con display quadrato da 1,8 pollici. La disponibilità di due formati consente di verificare l'adattabilità dell'interfaccia a geometrie differenti e costituisce un primo passo verso il supporto di ulteriori dispositivi. Le due configurazioni condividono la piattaforma software grafica, mentre la gestione delle periferiche dipende dalle caratteristiche specifiche della scheda e del display.
 \
-Il firmware coordina l'esecuzione dei task di sistema, la connettività Wi‑Fi in modalità AP e STA, la ricezione dei messaggi JSON via WebSocket e l'aggiornamento dell'interfaccia. Sulle piattaforme embedded, la gestione della memoria dinamica e la frequenza di refresh dello schermo richiedono particolare attenzione per garantire la fluidità del rendering, specialmente durante il disegno di elementi complessi come i codici QR.
+Il microcontrollore gestisce l'esecuzione del firmware, la connettività Wi‑Fi, l'elaborazione dei dati e l'aggiornamento dell'interfaccia. Le risorse limitate rispetto a un sistema desktop richiedono attenzione nell'uso della memoria e nella frequenza di ridisegno, soprattutto durante la visualizzazione di elementi grafici come codici QR e animazioni.
 \
+
 #align(center)[
   #image("../../img/esp32s3-display-rotondo.jpg", width: 65%)
   #v(5pt)
@@ -32,12 +33,12 @@ Il firmware coordina l'esecuzione dei task di sistema, la connettività Wi‑Fi 
 \
 == Linguaggio C++ <linguaggio-cpp>
 \
-Il firmware è stato implementato in C++, sfruttando i paradigmi della programmazione orientata agli oggetti per suddividere l'applicazione in moduli riutilizzabili e manutenibili. Questa scelta architetturale facilita l'intergazione tra i driver delle periferiche, lo stack di rete e la libreria grafica, isolando le diverse responsabilità del sistema.
+Il firmware è stato scritto in C++, linguaggio che permette di organizzare il programma in componenti riutilizzabili e di interagire con le periferiche e le librerie disponibili per la piattaforma ESP32. Il codice coordina la gestione della rete, la ricezione e l'elaborazione dei dati, la logica di navigazione e il disegno dei pannelli sul display.
 \
-La gestione delle risorse a memoria limitata dell'ESP32-S3 ha richiesto un'attenta ottimizzazione nella scrittura del codice, volto a garantire un bilanciamento efficiente tra i task di elaborazione dati, la reattività la reattività della rete e la fluidità del rendering grafico sull'interfaccia.
+L'impiego di C++ consente di integrare la logica applicativa con le librerie per la grafica, la connettività e la gestione delle periferiche. La struttura del firmware deve tenere conto delle risorse limitate del microcontrollore e coordinare in modo efficiente l'elaborazione dei dati, gli aggiornamenti dell'interfaccia e le operazioni di rete.
 \
 #align(center)[
-  #image("../../img/logo_c++.png", width: 45%)
+  #image("../../img/logo_c++.png", width: 30%)
   #v(5pt)
   #emph([Figura 4.3 - Logo del linguaggio di programmazione C++.])
 ] <fig-logo-cpp>
@@ -49,22 +50,22 @@ Per configurare e gestire il progetto è stato utilizzato PlatformIO, ambiente d
 La configurazione del progetto raccoglie i parametri necessari a riprodurre la toolchain e distingue le impostazioni comuni del firmware da quelle legate alle singole schede. PlatformIO è stato inoltre utilizzato nel ciclo iterativo di sviluppo: dopo ogni modifica, il firmware viene compilato e caricato sul dispositivo per verificare il comportamento effettivo dell'interfaccia e delle funzioni di rete.
 \
 #align(center)[
-  #image("../../img/platformIO_logo.png", width: 45%)
+  #image("../../img/platformIO_logo.png", width: 40%)
   #v(5pt)
   #emph([Figura 4.4 - Logo dell'ambiente di sviluppo PlatformIO.])
 ] <fig-logo-platformio>
 \
 == LVGL e interfaccia grafica <libreria-grafica-lvgl>
 \
-Per la realizzazione dell'interfaccia grafica è stata adottata LVGL (_Light and Versatile Graphics Library_), una libreria ottimizzata per sistemi embedded con display. LVGL mette a disposizione widget predefiniti e strumenti per la costruzione di schermate interattive, la gestione degli eventi di input e il rendering efficiente delle aree dello schermo, evitando di implementare da zero le primitive grafiche di basso livello.
+Per la realizzazione dell'interfaccia grafica è stata utilizzata LVGL (_Light and Versatile Graphics Library_), libreria orientata a sistemi embedded con display. LVGL fornisce componenti visuali e strumenti per costruire schermate interattive, gestire gli eventi di input e aggiornare le aree dello schermo senza dover implementare da zero tutte le primitive grafiche.
 \
-Nel progetto, la libreria viene impiegata per strutturare i pannelli informativi, visualizzare metriche, contatori e codici QR, gestire i menu di navigazione e le schermate diagnostiche. L'adozione di un pattern architetturale pulito separa la logica applicativa dai componenti di presentazione, facilitando l'aggiornamento dinamico dei contenuti in base ai messaggi ricevuti dal CRM e garantendo un'interazione coerente su entrambe le tipologie di display.
+Nel progetto la libreria viene utilizzata per comporre i pannelli informativi, mostrare testo, contatori e codici QR, gestire gli elementi di navigazione e presentare le schermate diagnostiche. La separazione tra logica applicativa e componenti visuali facilita l'aggiornamento dei contenuti quando arrivano nuovi dati dal CRM e permette di mantenere coerente l'interazione sulle due tipologie di display.
 \
-L'adattamento dell'interfaccia alle differenti geometrie dello schermo ha richiesto una configurazione mirata dei driver di visualizzazione e del modulo touch. Poiché il layout deve risultare perfettamente leggibile sia sul pannello circolare che su quello quadrato, gli elementi grafici sono stati disposti tenendo conto dei vincoli fisici dello spazio utile, valorizzando le peculiarità di ciascun formato senza compromettere l'usabilità.
+L'integrazione con l'hardware richiede inoltre i driver adatti al pannello e al sistema di input touch della scheda. Le dimensioni e la forma dello schermo influenzano la disposizione degli elementi: i contenuti devono rimanere leggibili e accessibili sia nel formato rotondo sia in quello quadrato.
 \
 
 #align(center)[
-  #image("../../img/interfaccia-lvgl.png", width: 80%)
+  #image("../../img/interfaccia-lvgl.png", width: 70%)
   #v(5pt)
   #emph([Figura 4.5 - Esempio dell'interfaccia realizzata con LVGL sul display del dispositivo.])
 ] <fig-interfaccia-lvgl>
@@ -72,15 +73,13 @@ L'adattamento dell'interfaccia alle differenti geometrie dello schermo ha richie
 \
 == Connettività e protocolli <connettivita-protocolli>
 \
-La connettività wireless si basa sul protocollo Wi‑Fi e prevede una gestione progressiva degli stati di connessione. All'avvio, il dispositivo si trova inizialmente in uno stato non connesso e verifica la presenza di credenziali memorizzate nella memoria non volatile tramite la libreria Preferences, avviando la connessione in modalità station (STA) in background.
+La connettività wireless è basata su Wi‑Fi e viene utilizzata sia durante la configurazione sia durante il funzionamento ordinario. Nella fase di provisioning il dispositivo opera in modalità Access Point (AP), creando una rete alla quale l'utente può collegarsi per aprire il portale locale e configurare le credenziali della rete dell'organizzazione. Dopo la configurazione, il dispositivo opera in modalità station (STA), collegandosi al punto di accesso disponibile per raggiungere il CRM RelAi.
 \
-Nel caso in cui le credenziali non siano configurate o il tentativo di connessione iniziale fallisca, il sistema attiva la modalità di provisioning Access Point (AP), generando una rete dedicata (ESP32-Config) e avviando un server HTTP locale supportato da un DNSServer per la gestione del captive portal. Questo permette all'utente di accedere al portale e visualizzare la scansione delle reti circostanti per configurare i parametri corretti.
+L'Access Point mantiene disponibile la procedura di configurazione quando il dispositivo non è ancora associato a una rete o quando le credenziali non sono valide. I casi d'uso prevedono il mantenimento del portale durante gli errori di scansione o connessione, così che l'utente possa correggere i parametri senza dover intervenire sul firmware. Il reset di fabbrica riporta il dispositivo allo stato iniziale e rende nuovamente disponibile la modalità di provisioning.
 \
-Una volta stabilita con successo la connessione alla rete dell'organizzazione, il dispositivo adotta un'architettura ibrida in modalità WIFI_AP_STA. In questa configurazione, l'Access Point rimane permanentemente attivo e accessibile in parallelo alla modalità STA, offrendo all'utente la costante possibilità di verificare, modificare o reinserire le credenziali in ogni momento senza interrompere il funzionamento ordinario.
+La comunicazione in tempo reale con il CRM RelAi utilizza WebSocket. A differenza di una sequenza di richieste indipendenti, il canale WebSocket consente di mantenere una connessione persistente attraverso la quale il dispositivo può ricevere aggiornamenti e comandi remoti, come la sincronizzazione dei dati, il riavvio e il reset. I messaggi applicativi descritti nei casi d'uso sono rappresentati in formato JSON; il firmware interpreta il contenuto e aggiorna i dati locali o lo stato del dispositivo.
 \
-La comunicazione in tempo reale con il CRM RelAi sfrutta un canale WebSocket persistente. A differenza delle richieste HTTP tradizionali, la connessione bidirezionale consente al dispositivo di ricevere istantaneamente aggiornamenti e comandi remoti, quali la sincronizzazione dei dati, il riavvio o il reset. I messaggi scambiati sono strutturati in formato JSON e vengono elaborati dal firmware per aggiornare dinamicamente lo stato del sistema.
-\
-In caso di interruzione temporanea della connettività o di irraggiungibilità del CRM, il sistema si avvale dei dati validi conservati nella cache locale, avviando al contempo routine di riconnessione automatica. Questo meccanismo di fallback garantisce la continuità visiva delle informazioni sui pannelli e riduce l'impatto dei disservizi di rete sulla fruibilità del prototipo.
+Quando la connessione al CRM o alla rete non è disponibile, il sistema utilizza i dati validi conservati localmente e avvia tentativi di riconnessione. Questo comportamento consente ai pannelli di continuare a mostrare l'ultimo stato noto e limita l'impatto delle interruzioni temporanee sulla fruizione delle informazioni.
 \
 == Persistenza e gestione dei dati <persistenza-gestione-dati>
 \
@@ -88,19 +87,31 @@ Le impostazioni necessarie al funzionamento del dispositivo e i dati utilizzati 
 \
 I dati ricevuti dal CRM vengono elaborati dal firmware e confrontati con quelli già disponibili. Quando è necessario, la copia locale viene aggiornata e l'interfaccia viene ridisegnata per riflettere i nuovi contenuti. La cache locale svolge inoltre la funzione di fallback: in assenza di connettività permette di continuare a visualizzare le informazioni dell'ultima sincronizzazione valida.
 \
-== Controllo di versione e documentazione
+== Controllo di versione e documentazione <strumenti-versionamento-documentazione>
 \
-Lo sviluppo e la documentazione richiedono strumenti che consentano di mantenere tracciabili le modifiche, organizzare i materiali del progetto e produrre elaborati aggiornabili. A questo scopo sono stati utilizzati Gitea per il controllo di versione e Typst per la stesura della documentazione.
+Lo sviluppo e la documentazione richiedono strumenti che consentano di mantenere tracciabili le modifiche, organizzare i materiali del progetto e produrre elaborati aggiornabili. A questo scopo sono stati utilizzati Gitea per il controllo di versione e Typst per la stesura della tesi.
 \
-=== Gitea
+=== Gitea <gitea>
 \
-Gitea è stato utilizzato come piattaforma di gestione dei repository del progetto firmware. Il controllo di versione permette di conservare la cronologia delle modifiche, isolare gli interventi in branch dedicati e sottoporre le modifiche a revisione tramite pull request e code review. Come descritto nel capitolo dedicato ai processi, questa organizzazione supporta la collaborazione con il tutor e facilita l'individuazione delle modifiche introdotte durante le diverse fasi di sviluppo.
+Gitea è stato utilizzato come piattaforma di gestione dei repository del progetto firmware. Il controllo di versione permette di conservare la cronologia delle modifiche, isolare gli interventi in branch dedicati e sottoporre le modifiche a revisione tramite _pull request_ e _code review_. Come descritto nel capitolo dedicato ai processi, questa organizzazione supporta la collaborazione con il tutor e facilita l'individuazione delle modifiche introdotte durante le diverse fasi di sviluppo.
 \
-=== Typst per la redazione della documentazione
+#align(center)[
+  #image("../../img/gitea_logo.png", width: 25%)
+  #v(5pt)
+  #emph([Figura 4.6 - Logo dell'ambiente di sviluppo Gitea.])
+] <fig-logo-gitea>
 \
-La documentazione tecnica è stata redatta in Typst, un sistema di composizione tipografica basato su markup. L'elaborato è suddiviso in file sorgente distinti per i capitoli e utilizza un file principale per configurare il documento e includere i contenuti. Questa struttura modulare rende più agevole aggiornare le singole parti e mantenere uniformi titoli, riferimenti, figure e tabelle.
+=== Typst per la redazione della tesi <typst-documentazione>
+\
+La documentazione finale è stata redatta in Typst, un sistema di composizione tipografica basato su markup. La tesi è suddivisa in file sorgente distinti per i capitoli e utilizza un file principale per configurare il documento e includere i contenuti. Questa struttura modulare rende più agevole aggiornare le singole parti e mantenere uniformi titoli, riferimenti, figure e tabelle.
 \
 La compilazione dei sorgenti produce il documento PDF destinato alla consultazione e alla consegna. L'uso di un formato testuale versionabile permette inoltre di tracciare le revisioni della documentazione insieme ai materiali del progetto e di rigenerare il PDF dopo gli aggiornamenti.
+\
+#align(center)[
+  #image("../../img/typst_logo.png", width: 25%)
+  #v(5pt)
+  #emph([Figura 4.7 - Logo dell'ambiente di sviluppo Typst.])
+] <fig-logo-typst>
 \
 == Riepilogo dello stack tecnologico <riepilogo-stack-tecnologico>
 \
@@ -112,17 +123,17 @@ La tabella seguente riassume i principali elementi tecnologici impiegati e il ru
   stroke: 0.5pt + rgb("b8b8bd"),
   fill: (_, row) => if calc.odd(row) { rgb("f5f5f7") } else { white },
   table.header([*Ambito*], [*Tecnologia*], [*Utilizzo nel progetto*]),
-  [Linguaggio], [C++], [Implementazione del firmware orientata agli oggetti e suddivisa in moduli manutenibili.],
-  [Microcontrollore], [Famiglia ESP32-S3], [Esecuzione del firmware e gestione delle periferiche su schede dotate rispettivamente di display rotondo da 1,75 pollici e quadrato da 1,8 pollici.],
+  [Linguaggio], [C++], [Implementazione del firmware e della logica applicativa.],
+  [Microcontrollore], [ESP32-S3 e scheda ESP32], [Esecuzione del firmware e gestione delle periferiche; rispettivamente con display rotondo da 1,75 pollici e quadrato da 1,8 pollici.],
   [Interfaccia grafica], [LVGL], [Composizione delle schermate, gestione dei componenti visuali e degli input touch.],
   [Toolchain], [PlatformIO], [Configurazione del progetto, compilazione, caricamento e verifica del firmware.],
-  [Rete locale], [Wi‑Fi AP e STA], [Gestione ibrida permanente con Access Point locale per il provisioning e connessione station verso la rete dell'organizzazione.],
-  [Comunicazione cloud], [WebSocket e JSON], [Ricezione bidirezionale in tempo reale di aggiornamenti e comandi remoti dal CRM RelAi.],
-  [Persistenza], [NVS e LittleFS], [Conservazione delle configurazioni tramite Preferences, cache eventi e salvataggio del logo su file system.],
+  [Rete locale], [Wi‑Fi AP e STA], [Provisioning locale tramite Access Point e collegamento del dispositivo alla rete dell'organizzazione in modalità station.],
+  [Comunicazione cloud], [WebSocket e JSON], [Ricezione di aggiornamenti e comandi dal CRM RelAi tramite messaggi applicativi.],
+  [Persistenza], [NVS e cache locale], [Conservazione delle configurazioni e dei dati necessari al ripristino dell'ultimo stato valido.],
   [Controllo versione], [Gitea], [Gestione dei repository, cronologia delle modifiche, branch e revisioni del codice.],
-  [Documentazione], [Typst], [Redazione modulare della documentazione tecnica e generazione del documento PDF.],
+  [Documentazione], [Typst], [Redazione modulare della tesi e generazione del documento PDF.],
 )
 #align(center)[#emph([Tabella 4.1 - Riepilogo delle tecnologie utilizzate.])]
 \
-Le tecnologie descritte costituiscono la base per le successive attività di progettazione e implementazione del firmware. In particolare, la piattaforma hardware basata su ESP32-S3 e LVGL definiscono il contesto della presentazione grafica, mentre l'architettura di rete ibrida Wi‑Fi, i canali WebSocket e i meccanismi di persistenza locale consentono un'integrazione resiliente con il CRM RelAi e la continuità del servizio.
+Le tecnologie descritte costituiscono la base per le successive attività di progettazione e implementazione del firmware. In particolare, la piattaforma hardware e LVGL definiscono il contesto della presentazione grafica, mentre Wi‑Fi, WebSocket e la persistenza locale consentono l'integrazione con RelAi e la continuità del servizio.
 #pagebreak()
