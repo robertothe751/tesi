@@ -1,24 +1,60 @@
 #import "shared.typ": *
 
-/*
 #pagebreak()
 = Verifica e validazione <verifica-validazione>
-
-#placeholder
-#placeholder
-Alcune funzioni richiedono ulteriori verifiche prima di un rilascio operativo. In particolare, l'aggiornamento OTA è attivabile da comando remoto ma non dispone di un controllo autonomo periodico; il trasferimento usa un client non cifrato e il codice esaminato non implementa una verifica esplicita della firma del firmware. Inoltre, le operazioni chiamate “reset” non eliminano gli stessi dati: il reset dal menu, il comando remoto e l'endpoint `/reset_factory` hanno effetti diversi, come dettagliato nel capitolo 5. Questi aspetti, insieme all'assenza di metriche quantitative, costituiscono i principali limiti residui della validazione.
-Esempio di importazione di un file contenente codice:
-#figure(```python
-# Il contenuto di code/example.py viene riportato qui per mantenere il file Typst autonomo.
-def recur_fibo(n):
-    if n <= 1:
-        return n
-    return recur_fibo(n - 1) + recur_fibo(n - 2)
-
-nterms = 10
-for i in range(nterms):
-    print(recur_fibo(i))
-```, caption: [Fibonacci recursive], kind: raw) <listing-py-fibo>
-
-#placeholder
-*/
+\
+La fase di verifica ha avuto lo scopo di controllare che le singole funzioni del firmware rispondessero ai requisiti definiti durante l'analisi; la validazione ha invece riguardato l'uso del sistema completo nelle condizioni operative previste. Poiché il progetto integra componenti che dipendono direttamente da periferiche fisiche, entrambe le attività sono state svolte sulla macchina reale: le schede ESP32-S3 con display e touch sono state alimentate e programmate, e le funzioni sono state provate interagendo con il pannello, con il portale Wi-Fi e con il servizio RelAi. Non è stato utilizzato un simulatore per sostituire il display, il controller touch o la connettività del dispositivo.
+\
+== Ambiente e modalità di prova <ambiente-prove>
+\
+Il firmware è stato sviluppato e caricato sulle schede mediante PlatformIO, usando l'ambiente `esp32-s3-devkitc-1`. Durante le prove il comportamento del dispositivo è stato osservato direttamente sul display e, quando necessario, attraverso il monitor seriale configurato a 115200 baud. I messaggi prodotti dai moduli Wi-Fi, API, WebSocket, cache, LittleFS e interfaccia hanno permesso di seguire l'avvio, l'esito delle richieste al CRM e gli aggiornamenti della cache senza ricorrere a strumenti di simulazione.
+\
+Le prove hanno riguardato la configurazione principale con display rotondo da 1,75 pollici e la seconda variante da 1,8 pollici. Le verifiche relative ai servizi di rete e alla sincronizzazione sono state svolte sul prototipo connesso alla rete e all'ambiente RelAi disponibile; le prove di visualizzazione, navigazione e touch sono state effettuate sul pannello fisico e ripetute sulla variante hardware interessata. In questo modo è stato possibile verificare non soltanto la correttezza dei dati ricevuti, ma anche il loro effettivo rendering e la risposta dell'interfaccia ai tocchi.
+\
+La directory `test` del progetto non contiene una suite di test automatizzati, ma soltanto il file introduttivo predefinito di PlatformIO. Il collaudo è quindi di tipo funzionale e manuale: per ciascuna prova si è eseguita l'operazione sul dispositivo, osservando il risultato sul display, nel portale o nel monitor seriale. Gli esiti descritti di seguito sono qualitativi; non vengono attribuiti al sistema valori numerici di latenza, autonomia o copertura che non siano stati raccolti con misurazioni dedicate.
+\
+== Avvio e configurazione della rete <verifica-rete>
+\
+La prima verifica è stata eseguita dopo il caricamento del firmware e il riavvio della scheda. Sul monitor seriale è stato controllato il completamento dell'inizializzazione del file system LittleFS e del routing HTTP; sul dispositivo è stata verificata la comparsa dell'Access Point `ESP32-Config`. Questo passaggio ha permesso di accertare che il sistema fosse raggiungibile anche prima di aver configurato una rete esterna.
+\
+La procedura di provisioning è stata provata collegandosi all'Access Point con un dispositivo client e aprendo il portale locale. Dal portale è stata avviata la scansione delle reti, selezionata una rete disponibile e inviata la richiesta di connessione. In presenza di credenziali valide, il firmware ha completato la connessione station e salvato SSID e password nella NVS; dopo il riavvio è stato verificato che le credenziali fossero ancora disponibili e che la connessione venisse avviata nuovamente.
+\
+È stato provato anche il caso di credenziali errate. Il firmware interrompe il tentativo non riuscito, restituisce al portale un esito di errore e mantiene attivo l'Access Point, così da permettere una nuova configurazione senza riflashare la scheda. La prova è importante perché verifica insieme la gestione dell'errore e la raggiungibilità del dispositivo dopo un input non valido.
+\
+Successivamente sono stati consultati gli endpoint locali di stato e scansione. La risposta di `/status` è stata confrontata con lo stato effettivo della connessione e con la versione del firmware; `/scan` è stato verificato durante l'avvio asincrono e al completamento della ricerca. Le richieste di connessione e di reset sono state controllate dal portale, considerando che i diversi percorsi di reset non hanno tutti la stessa semantica, come illustrato nella sezione dedicata ai limiti.
+\
+== Sincronizzazione con RelAi e funzionamento offline <verifica-sincronizzazione>
+\
+Con il dispositivo connesso alla rete, è stata verificata la comunicazione periodica con il CRM tramite heartbeat HTTP. Il controllo ha riguardato l'invio delle informazioni identificative e della telemetria disponibili nel firmware, tra cui uptime, memoria heap libera e intensità del segnale Wi-Fi, insieme alla ricezione delle impostazioni e degli eventi. Gli eventi ricevuti sono stati confrontati con quelli visualizzati sul display: per ciascun elemento devono essere coerenti identificativo, nome, prenotazioni, partecipanti e collegamento associato al QR code.
+\
+È stata verificata anche la ricezione degli aggiornamenti attraverso il canale WebSocket. Dopo l'attivazione del canale da parte della configurazione ricevuta dal CRM, le variazioni di eventi e impostazioni vengono elaborate dal task di rete; se i dati sono cambiati, il firmware aggiorna la cache e richiede la ricostruzione delle schermate. Il risultato atteso, osservato durante la prova, è che le informazioni sul pannello si aggiornino senza riavviare il dispositivo né intervenire manualmente sul display.
+\
+Per il funzionamento offline è stata interrotta la connessione al router e sono state poi ripetute le verifiche dopo un riavvio. Gli eventi precedentemente acquisiti vengono recuperati dalla NVS, mentre il logo salvato viene letto da LittleFS: la schermata può quindi continuare a mostrare l'ultimo contenuto disponibile anche quando il CRM non è raggiungibile. Quando la rete risulta assente per oltre quindici secondi e sono presenti credenziali salvate, il task di rete mostra inoltre un avviso sul display; al ripristino del collegamento l'avviso viene rimosso e la sincronizzazione può riprendere.
+\
+Il logo è stato verificato separatamente controllando il download quando la rete è connessa, la persistenza dopo il riavvio e la visualizzazione della schermata dedicata. Il firmware accetta il contenuto PNG binario oppure una codifica esadecimale compatibile, controlla la firma del file e i limiti dimensionali dichiarati nel codice, e memorizza il risultato in LittleFS. Quando il logo non è disponibile o non è decodificabile, l'interfaccia mostra un messaggio alternativo invece di lasciare una schermata incompleta.
+\
+== Verifica dell'interfaccia sui dispositivi fisici <verifica-interfaccia>
+\
+La verifica grafica è stata condotta osservando il display durante la creazione delle pagine evento, la visualizzazione del logo e l'apertura del menu. Per gli eventi sono stati controllati i valori ricevuti dal CRM e la corrispondenza tra ogni pagina e il relativo codice QR. È stata poi verificata la navigazione orizzontale tra la scheda informativa e quella contenente il QR, oltre alla rotazione automatica e ai comandi manuali di avanzamento e arretramento.
+\
+Le interazioni sono state eseguite direttamente sul touch screen, non simulate via software. Sono stati controllati i pulsanti di navigazione, le finestre modali di stato e di condivisione Wi-Fi e il triplo tocco che abilita o sospende la rotazione automatica. Sul modello con controller CST820 è stata inoltre verificata la risposta al rilascio del dito: il firmware applica un debounce di 50 ms e tenta di disabilitare la modalità di autosleep del controller, mentre la variante da 1,75 pollici usa il driver CST della famiglia CST92xx e le proprie trasformazioni delle coordinate.
+\
+Il confronto tra le due schede ha permesso di verificare che la gestione del display e del touch dipenda dalla configurazione hardware, mentre la logica di presentazione dei dati e di sincronizzazione rimanga comune. In particolare, sono stati considerati l'avvio del pannello, il rendering dei contenuti e la possibilità di raggiungere le funzioni principali attraverso i controlli previsti. Le verifiche non sono state limitate alla compilazione: l'esito è stato valutato sul dispositivo acceso e durante l'interazione fisica con lo schermo.
+\
+== Anomalie emerse e interventi correttivi <anomalie-interventi>
+\
+Le prove sul prototipo sono state utili anche per individuare problemi che non sarebbero risultati evidenti dalla sola lettura dei sorgenti. Una prima anomalia riguardava il salvataggio del logo nella NVS: la dimensione dell'immagine poteva superare lo spazio disponibile per i dati gestiti da `Preferences`, causando errori durante il funzionamento e, in alcune condizioni, il riavvio del dispositivo. La persistenza del logo è stata quindi spostata su LittleFS, mentre la NVS è rimasta dedicata a credenziali, impostazioni e cache strutturata degli eventi.
+\
+Un secondo problema era la scarsa reattività dell'interfaccia durante il recupero del logo. La richiesta HTTP e la successiva elaborazione non devono occupare il mutex di LVGL: il download è stato collocato nel task di rete, al di fuori della sezione critica grafica, e la UI legge il file già disponibile. Questo intervento ha separato il lavoro di rete dal rendering e ridotto il rischio che una richiesta lenta impedisse l'aggiornamento dello schermo.
+\
+Durante le prove del touch sulla variante da 1,8 pollici è stata inoltre affrontata la perdita di alcuni tocchi dopo un periodo di inattività, riconducibile alla modalità di autosleep del controller. La configurazione prova a disabilitare tale modalità e la lettura conferma il rilascio solo dopo un intervallo di debounce. L'interazione è stata quindi verificata nuovamente sul pannello fisico dopo la correzione, prestando attenzione sia alla pressione sia al rilascio.
+\
+== Esito della validazione e limiti residui <esito-validazione>
+\
+Il collaudo sulla macchina fisica ha consentito di validare i flussi principali previsti dai requisiti: configurazione Wi-Fi, ricezione e visualizzazione degli eventi, aggiornamento dei contenuti, recupero dei dati locali dopo una disconnessione e navigazione touch. La combinazione tra osservazione del display e riscontri seriali ha permesso di seguire il comportamento dalla richiesta di rete fino alla presentazione dei dati all'utente. Gli esiti sono qualitativi e riferiti alle prove funzionali svolte sul prototipo, non a una campagna statistica su un campione di dispositivi.
+\
+Rimangono alcuni limiti da considerare. Non sono presenti test automatici né registrazioni strutturate con tempi di risposta o misure di stabilità a lungo termine. La funzione di stampa periodica delle statistiche heap è presente nel codice, ma la relativa chiamata risulta commentata nel task di rete: non è quindi possibile ricavare dal firmware attuale una serie temporale affidabile del consumo di memoria. Le prove di durata svolte durante lo stage hanno permesso di osservare il sistema in uso prolungato, ma non sono accompagnate da dati sufficienti per dichiarare una soglia quantitativa di affidabilità.
+\
+Anche il percorso di aggiornamento OTA richiede ulteriori verifiche prima di un impiego produttivo: il controllo periodico autonomo non è attivo, il trasferimento usa un client non cifrato e nel codice esaminato non è presente una verifica esplicita della firma del firmware. Infine, le procedure chiamate reset hanno effetti differenti: il reset dal menu elimina le credenziali Wi-Fi e la cache eventi, il comando remoto cancella anche il namespace delle impostazioni ma non il logo, mentre l'endpoint `/reset_factory` rimuove anche il file del logo. Questa differenza è stata riportata come limite funzionale e rappresenta un possibile intervento futuro per rendere uniforme il ripristino di fabbrica.
+\
+Nel complesso, le prove eseguite direttamente sulle schede hanno confermato la coerenza delle funzionalità essenziali con i casi d'uso descritti. Per rendere il processo ripetibile e ampliare la copertura, un'evoluzione del progetto dovrebbe affiancare al collaudo hardware test automatici per parsing e cache, prove d'integrazione documentate per gli endpoint e il CRM e la raccolta sistematica dei log e delle misure durante le sessioni prolungate.
