@@ -87,8 +87,7 @@ Il presente documento descrive il lavoro svolto durante il periodo di stage curr
 Questa tesi tratta la progettazione e lo sviluppo di un'interfaccia utente su microcontrollori ESP32 dotati di display, finalizzata alla visualizzazione in tempo reale delle informazioni gestite da RelAi, il CRM aziendale di #azienda. Il sistema permette di esporre dati chiave quali codici QR, prenotazioni di eventi, il contatore degli iscritti a un'organizzazione e il contatore dei partecipanti a un evento direttamente presso le sedi delle organizzazioni clienti.
 
 Lo scopo del progetto è duplice: da un lato, realizzare un firmware robusto e ottimizzato per dispositivi _embedded_ con rigidi vincoli di memoria e risorse grafiche; dall'altro, implementare una connettività affidabile tramite provisioning Wi-Fi, gestione della cache locale dei dati e sincronizzazione periodica con le API aziendali, garantendo la continuità operativa anche in condizioni di assenza di rete.
-Il testo è suddiviso in otto capitoli. Il primo capitolo introduce il contesto aziendale, gli obiettivi del progetto e la pianificazione complessiva dello stage. Il secondo capitolo descrive i processi, le metodologie di sviluppo adottate e le modalità di interazione e revisione con il tutor aziendale. Il terzo capitolo presenta l'analisi degli utenti, i casi d'uso e i requisiti del sistema. Il quarto capitolo illustra le tecnologie hardware e software utilizzate per lo sviluppo del prototipo. Il quinto capitolo descrive l'architettura del firmware e l'implementazione dei moduli di connettività e provisioning. Il sesto capitolo tratta le attività di verifica e validazione del sistema. Il settimo capitolo riassume i risultati conseguiti e le conclusioni, mentre l'ottavo capitolo raccoglie la bibliografia e i riferimenti sitografici.
-Il testo è articolato in cinque capitoli, seguiti dai riferimenti bibliografici e sitografici. Il primo capitolo introduce il contesto aziendale, gli obiettivi del progetto e l'organizzazione dello stage. Il secondo descrive i processi e le metodologie adottate. Il terzo presenta l'analisi degli utenti, i casi d'uso e i requisiti. Il quarto illustra le tecnologie hardware e software. Il quinto tratta la progettazione e la codifica del firmware, con particolare attenzione al backend e alle interfacce dei due dispositivi.
+L'elaborato è articolato in sei capitoli, seguiti dal glossario e dai riferimenti bibliografici e sitografici. Il primo capitolo introduce il contesto aziendale, gli obiettivi del progetto e l'organizzazione dello stage. Il secondo descrive i processi e le metodologie adottate; il terzo presenta gli utenti, i casi d'uso e i requisiti. Il quarto illustra le tecnologie hardware e software, mentre il quinto tratta la progettazione e la codifica del firmware. Il sesto capitolo descrive le attività di verifica e validazione del prototipo.
 \
 
 #pagebreak()
@@ -115,10 +114,7 @@ Il testo è articolato in cinque capitoli, seguiti dai riferimenti bibliografici
 #include "chapters/03-analisi-requisiti.typ"
 #include "chapters/04-tecnologie-utilizzate.typ"
 #include "chapters/05-progettazione-codifica.typ"
+#include "chapters/06-verifica-validazione.typ"
 
 #include "chapters/08-glossario.typ"
 #include "chapters/09-bibliografia.typ"
-/*
-#include "chapters/06-verifica-validazione.typ"
-#include "chapters/07-conclusioni.typ"
-*/

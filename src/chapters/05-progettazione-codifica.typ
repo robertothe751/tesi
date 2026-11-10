@@ -22,7 +22,7 @@ L'architettura del software adotta un approccio modulare volto a disaccoppiare l
 \
 == Backend: avvio, task e accesso condiviso <backend-task>
 \
-La funzione `setup()` all'interno di `main.cpp` inizializza la seriale, il sottosistema di rete, il display e LVGL, creando successivamente due task FreeRTOS dedicati e associati ai rispettivi core (@fig:setup):
+La funzione `setup()` all'interno di `main.cpp` inizializza la seriale, il server locale, il display e LVGL, creando successivamente due task FreeRTOS dedicati e associati ai rispettivi core (@fig:setup). I task sono creati con priorità 1 per la rete e 2 per il display:
 \
 #figure(
   ```cpp
@@ -48,8 +48,8 @@ La funzione `setup()` all'interno di `main.cpp` inizializza la seriale, il sotto
   caption: [Funzione `setup()` dell'ESP32-S3],
 ) <fig:setup>
 \
-- *`NetworkTask` (Core 0, priorità 0)*: gestisce il provisioning Wi-Fi, il server web permanente, le richieste HTTP, la connessione WebSocket con il CRM, il download del logo dell'organizzazione e la segnalazione all'utente di eventuali perdite di connettività.
-- *`DisplayTask` (Core 1, priorità 1)*: esegue ciclicamente il rendering grafico e la gestione degli input tramite il motore LVGL. Poiché lo scheduler di FreeRTOS assegna una priorità maggiore ai valori numerici più alti (dove 1 prevale su 0), questo task garantisce la fluidità visiva e la reattività dell'interfaccia anche in presenza di operazioni di rete sul task a priorità inferiore.
+- *`NetworkTask` (Core 0, priorità 1)*: gestisce il provisioning Wi-Fi, il server web permanente, le richieste HTTP, il client WebSocket con il CRM, il download del logo dell'organizzazione e la segnalazione all'utente di eventuali perdite di connettività.
+- *`DisplayTask` (Core 1, priorità 2)*: esegue ciclicamente il rendering grafico e la gestione degli input tramite LVGL. La priorità numerica più alta assegna a questo task una precedenza maggiore rispetto al task di rete, senza costituire una garanzia assoluta di fluidità in presenza di operazioni bloccanti.
 \
 Poiché le risorse di LVGL non sono thread-safe, le operazioni grafiche sono protette mediante l'utilizzo del mutex lvgl_mutex, creato in init_display_touch_lvgl(). Il task del display acquisisce il semaforo prima di invocare l'handler dei timer grafici e ne limita il tempo di attesa tra 1 e 10 ms (@fig:display-task):
 \
@@ -134,7 +134,7 @@ Il server HTTP espone endpoint REST dedicati alla gestione e alla manutenzione d
   caption: [Registrazione degli endpoint del server HTTP locale],
 ) <fig:routes>
 \
-Durante la scansione delle reti la connessione STA viene temporaneamente sospesa, poiché l'ESP32 non può scansionare e mantenere la connessione contemporaneamente in modo affidabile; al termine, `riprendi_sta_dopo_scan()` ripristina la connessione con le credenziali salvate. Il server viene servito dal `NetworkTask` tramite `gestisci_wifi_prov()`, che a ogni iterazione elabora le richieste DNS e HTTP e invoca la gestione periodica del client WebSocket e dell'heartbeat.
+La scansione delle reti è avviata in modalità asincrona. Il firmware disconnette temporaneamente la STA solo se non è già connessa; in tal caso, al termine della scansione tenta di ripristinare il collegamento usando le credenziali salvate. Il server viene gestito dal `NetworkTask` tramite `gestisci_wifi_prov()`, che elabora le richieste DNS e HTTP e invoca la gestione periodica del client WebSocket e dell'heartbeat.
 \
 == Backend: sincronizzazione con RelAi <backend-relai>
 
@@ -240,11 +240,11 @@ Oltre al polling periodico, il dispositivo stabilisce una connessione WebSocket 
 Attraverso questo canale, e analogamente tramite il campo `commands` della risposta all'heartbeat, il CRM può inviare comandi remoti gestiti da `esegui_comando_remoto()`:
 \
 - `restart`: riavvio del dispositivo;
-- `reset`: ripristino di fabbrica, con cancellazione delle credenziali Wi-Fi, delle impostazioni, della cache eventi e del logo, seguita dal riavvio;
+- `reset`: cancellazione delle credenziali Wi-Fi, delle impostazioni e della cache eventi, seguita dal riavvio; il logo salvato in LittleFS non viene eliminato da questo comando;
 - `shutdown`: spegnimento del display e del Wi-Fi e ingresso in deep sleep;
 - `ota`: aggiornamento del firmware a partire dall'URL indicato nel comando (`firmware_url`).
 \
-Durante l'aggiornamento OTA, eseguito con `httpUpdate`, il mutex di LVGL viene trattenuto per l'intera durata del download, sospendendo il rendering per evitare conflitti di memoria; a operazione riuscita il dispositivo viene riavviato.
+L'aggiornamento OTA è eseguito con `httpUpdate` usando un client Wi-Fi non cifrato. La funzione tenta di acquisire il mutex LVGL con un timeout di cinque secondi; se non riesce, procede comunque con il download, quindi la sospensione del rendering non è garantita in ogni situazione. In caso di aggiornamento riuscito il dispositivo viene riavviato.
 \
 Gli stessi messaggi WebSocket possono inoltre contenere un blocco `settings` o un elenco `events`, che vengono elaborati con le stesse funzioni dell'heartbeat, consentendo l'aggiornamento immediato del display quando i dati cambiano sul CRM.
 \
@@ -285,7 +285,7 @@ L'interfaccia grafica si appoggia sui driver hardware del display AMOLED e del t
   caption: [Inizializzazione di display, touch e LVGL (versione sintetizzata)],
 ) <fig:init-display>
 \
-Le due varianti hardware differiscono nella configurazione del bus e del touch. Nella prima, il touch è gestito dalla libreria `TouchDrvCSTXXX` (controller CST92xx) e le coordinate lette sono adattate all'orientamento del display tramite le costanti `TOUCH_INVERT_X`, `TOUCH_INVERT_Y` e `TOUCH_SWAP_XY`. Nella seconda, che utilizza un controller CST820, il bus SPI opera a 40 MHz, i buffer hanno altezza pari a un decimo dello schermo e il display è azionato dopo il reset tramite expander I/O; la lettura del touch implementa inoltre un sistema di debounce per confermare il rilascio del tocco ed evitare la perdita di input dovuta allo stato di autosleep del controller (@fig:touch).
+Le due varianti hardware differiscono nella configurazione del touch e nei parametri del display. Nella variante da 1,75 pollici il touch è gestito dalla libreria `TouchDrvCSTXXX` con un controller della famiglia CST92xx; le coordinate sono adattate all'orientamento tramite le costanti `TOUCH_INVERT_X`, `TOUCH_INVERT_Y` e `TOUCH_SWAP_XY`. Nella variante da 1,8 pollici il controller CST820 è gestito tramite il driver della famiglia CST816x, collegato via I²C; il display usa il bus QSPI a 40 MHz e buffer alti un decimo dello schermo. L'avvio del pannello passa inoltre da un expander I/O; per il touch sono presenti sia un tentativo di disabilitare l'autosleep sia un debounce di 50 ms sul rilascio (@fig:touch).
 \
 #figure(
   ```cpp
@@ -325,7 +325,7 @@ Ogni schermata evento contiene un `tileview` a due tile: la prima riporta identi
 \
 La navigazione tra le schermate avviene in due modi. Una rotazione automatica, la cui cadenza è fornita dal CRM (30 secondi di default), avanza ciclicamente le schermate con un'animazione di transizione. In alternativa, due pulsanti fissi, collocati su un livello sovrapposto (`lv_layer_top`), permettono di scorrere manualmente in avanti e indietro. Un triplo tocco entro 1,5 secondi attiva o disattiva la rotazione automatica, e lo stato viene segnalato da un alone luminoso sui pulsanti. Un flag di animazione in corso impedisce cambi di schermata concorrenti.
 \
-La schermata di menu consente di visualizzare una finestra di stato (SSID, stato della rete, ultima sincronizzazione e versione del firmware), mostrare due QR code (uno per collegarsi al portale di configurazione `ESP32-Config`, l'altro per condividere la rete Wi-Fi corrente) ed eseguire il reset delle credenziali Wi-Fi o del dispositivo.
+La schermata di menu consente di visualizzare lo stato della rete, l'SSID quando connesso e la versione del firmware, mostrare i QR code per accedere al portale di configurazione o condividere la rete corrente, ed eseguire operazioni locali di manutenzione. La voce visualizzata come “Ultima sincronizzazione” rappresenta in realtà il tempo trascorso dall'ultima disconnessione Wi-Fi, non l'istante dell'ultima sincronizzazione con il CRM.
 \
 == Frontend web: configurazione e diagnostica <frontend-web>
 \
@@ -338,7 +338,9 @@ Dall'analisi del codice sono emerse le seguenti criticità, da affrontare prima 
 - *Segreti e token API*: il token di autenticazione è attualmente definito in chiaro all'interno del codice sorgente (`api.cpp`), così come l'indirizzo MAC identificativo del dispositivo; è necessario adottare un sistema di archiviazione sicuro o una configurazione esterna per ciascun dispositivo.
 - *Validazione TLS*: l'utilizzo di `setInsecure()` sul client TLS disabilita il controllo dei certificati del server remoto; è raccomandata l'implementazione della validazione della catena di trust. Considerazioni analoghe valgono per la connessione WebSocket sicura.
 - *Access Point di configurazione*: le credenziali dell'Access Point (`ESP32-Config`) sono fisse e comuni a tutti i dispositivi, e gli endpoint di gestione (`/reboot`, `/reset_factory`, `/connect`) non richiedono alcuna autenticazione; chiunque si colleghi all'Access Point può quindi modificarne la configurazione. Le credenziali della rete Wi-Fi sono inoltre memorizzate in chiaro nella NVS.
-- *Aggiornamenti OTA*: la logica OTA è predisposta per l'esecuzione tramite comando remoto, ma non prevede controlli periodici autonomi (la funzione corrispondente nel `NetworkTask` è attualmente disattivata). Il download avviene tramite un client non cifrato e senza verifica della firma del firmware, motivo per cui andrebbe introdotta una validazione dell'immagine.
-- *Operazioni bloccanti*: la richiesta `/connect` attende fino a 10 secondi l'esito della connessione all'interno del `NetworkTask`, sospendendo nel frattempo heartbeat e WebSocket.
+*Aggiornamenti OTA*: l'aggiornamento è attivabile tramite comando remoto; il controllo periodico autonomo è disattivato e la funzione dedicata restituisce sempre `false`. Il download usa un client non cifrato e nel codice esaminato non è presente una verifica esplicita della firma dell'immagine; prima di un impiego produttivo sono quindi necessari un trasporto autenticato e controlli d'integrità e autenticità.
+*Operazioni bloccanti*: la richiesta `/connect` attende fino a 10 secondi l'esito della connessione all'interno del `NetworkTask`, sospendendo nel frattempo l'elaborazione periodica di DNS, HTTP, heartbeat e WebSocket.
+- *Reset con semantiche diverse*: il reset locale dal menu cancella le credenziali Wi-Fi e la cache eventi, ma non tutte le impostazioni né il logo; il comando remoto `reset` cancella anche il namespace delle impostazioni, ma non elimina il logo. L'endpoint locale `/reset_factory` è invece quello che rimuove anche il file del logo. Le diverse operazioni non hanno quindi lo stesso effetto e andrebbero uniformate.
+- *Stato di sincronizzazione*: la finestra diagnostica presenta come ultima sincronizzazione il tempo dalla disconnessione della rete, mentre quando la rete è connessa mostra “ora”; non viene mantenuto un timestamp effettivo dell'ultimo scambio riuscito con il CRM.
 \
 #pagebreak()
