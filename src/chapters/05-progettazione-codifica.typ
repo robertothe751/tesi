@@ -48,8 +48,8 @@ La funzione `setup()` all'interno di `main.cpp` inizializza la seriale, il serve
   caption: [Funzione `setup()` dell'ESP32-S3],
 ) <fig:setup>
 \
-- *`NetworkTask` (Core 0, priorità 1)*: gestisce il provisioning Wi-Fi, il server web permanente, le richieste HTTP, il client WebSocket con il CRM, il download del logo dell'organizzazione e la segnalazione all'utente di eventuali perdite di connettività.
-- *`DisplayTask` (Core 1, priorità 2)*: esegue ciclicamente il rendering grafico e la gestione degli input tramite LVGL. La priorità numerica più alta assegna a questo task una precedenza maggiore rispetto al task di rete, senza costituire una garanzia assoluta di fluidità in presenza di operazioni bloccanti.
+- *`NetworkTask` (Core 0, priorità 0)*: gestisce il provisioning Wi-Fi, il server web permanente, le richieste HTTP, il client WebSocket con il CRM, il download del logo dell'organizzazione e la segnalazione all'utente di eventuali perdite di connettività.
+- *`DisplayTask` (Core 1, priorità 1)*: esegue ciclicamente il rendering grafico e la gestione degli input tramite LVGL. La priorità numerica più alta assegna a questo task una precedenza maggiore rispetto al task di rete, senza costituire una garanzia assoluta di fluidità in presenza di operazioni bloccanti.
 \
 Poiché le risorse di LVGL non sono thread-safe, le operazioni grafiche sono protette mediante l'utilizzo del mutex lvgl_mutex, creato in init_display_touch_lvgl(). Il task del display acquisisce il semaforo prima di invocare l'handler dei timer grafici e ne limita il tempo di attesa tra 1 e 10 ms (@fig:display-task):
 \

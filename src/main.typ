@@ -87,7 +87,7 @@ Il presente documento descrive il lavoro svolto durante il periodo di stage curr
 Questa tesi tratta la progettazione e lo sviluppo di un'interfaccia utente su microcontrollori ESP32 dotati di display, finalizzata alla visualizzazione in tempo reale delle informazioni gestite da RelAi, il CRM aziendale di #azienda. Il sistema permette di esporre dati chiave quali codici QR, prenotazioni di eventi, il contatore degli iscritti a un'organizzazione e il contatore dei partecipanti a un evento direttamente presso le sedi delle organizzazioni clienti.
 
 Lo scopo del progetto è duplice: da un lato, realizzare un firmware robusto e ottimizzato per dispositivi _embedded_ con rigidi vincoli di memoria e risorse grafiche; dall'altro, implementare una connettività affidabile tramite provisioning Wi-Fi, gestione della cache locale dei dati e sincronizzazione periodica con le API aziendali, garantendo la continuità operativa anche in condizioni di assenza di rete.
-L'elaborato è articolato in sei capitoli, seguiti dal glossario e dai riferimenti bibliografici e sitografici. Il primo capitolo introduce il contesto aziendale, gli obiettivi del progetto e l'organizzazione dello stage. Il secondo descrive i processi e le metodologie adottate; il terzo presenta gli utenti, i casi d'uso e i requisiti. Il quarto illustra le tecnologie hardware e software, mentre il quinto tratta la progettazione e la codifica del firmware. Il sesto capitolo descrive le attività di verifica e validazione del prototipo.
+L'elaborato è articolato in sette capitoli, seguiti dal glossario e dai riferimenti bibliografici e sitografici. Il primo capitolo introduce il contesto aziendale, gli obiettivi del progetto e l'organizzazione dello stage. Il secondo descrive i processi e le metodologie adottate; il terzo presenta gli utenti, i casi d'uso e i requisiti. Il quarto illustra le tecnologie hardware e software, il quinto tratta la progettazione e la codifica del firmware e il sesto descrive le attività di verifica e validazione. Il settimo capitolo presenta il consuntivo, i risultati, i limiti e gli sviluppi futuri del progetto.
 \
 
 #pagebreak()
@@ -115,6 +115,7 @@ L'elaborato è articolato in sei capitoli, seguiti dal glossario e dai riferimen
 #include "chapters/04-tecnologie-utilizzate.typ"
 #include "chapters/05-progettazione-codifica.typ"
 #include "chapters/06-verifica-validazione.typ"
+#include "chapters/07-conclusioni.typ"
 
 #include "chapters/08-glossario.typ"
 #include "chapters/09-bibliografia.typ"
