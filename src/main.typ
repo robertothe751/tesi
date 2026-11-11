@@ -17,6 +17,27 @@
 #set figure.caption(position: bottom)
 #show figure.caption: set text(weight: "bold")
 
+// Numerazione per capitolo (Figura 1.1, Tabella 3.1, Codice 5.1)
+// Il contatore di ogni tipo riparte da capitolo*1000: così il numero resta corretto in liste e riferimenti.
+#set figure(numbering: (..n) => {
+  let v = n.pos().first()
+  numbering("1.1", calc.div-euclid(v, 1000), calc.rem-euclid(v, 1000))
+})
+#show figure.where(kind: image): set figure(supplement: [Figura])
+#show figure.where(kind: table): set figure(supplement: [Tabella])
+#show figure.where(kind: raw): set figure(supplement: [Codice])
+#show figure.where(kind: table): set block(breakable: true)
+#show heading.where(level: 1): it => {
+  it
+  context {
+    let c = counter(heading).get().first() * 1000
+    counter(figure.where(kind: image)).update(c)
+    counter(figure.where(kind: table)).update(c)
+    counter(figure.where(kind: raw)).update(c)
+  }
+}
+#show ref: set text(fill: rgb("0b5394"))
+
 #import "chapters/shared.typ": *
 
 // Frontespizio
@@ -103,6 +124,11 @@ L'elaborato è articolato in sette capitoli, seguiti dal glossario e dai riferim
 
 #pagebreak()
 = Elenco delle tabelle <tabelle>
+#outline(target: figure.where(kind: table), title: none)
+
+#pagebreak()
+= Elenco dei codici sorgenti <codici>
+#outline(target: figure.where(kind: raw), title: none)
 
 #pagebreak()
 #counter(page).update(1)

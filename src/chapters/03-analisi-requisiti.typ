@@ -254,7 +254,10 @@ In fase di sviluppo, tutti i requisiti individuati sono stati verificati in modo
 
 I requisiti funzionali definiscono le capacità che il sistema deve mettere a disposizione dell'organizzazione cliente e dell'utente finale. Essi riguardano in particolare la configurazione del dispositivo, la lettura dei dati di evento, la visualizzazione dei contenuti sul display e la gestione delle operazioni di manutenzione.
 
-#table(
+Lo stato di attuazione dei requisiti funzionali è riepilogato nella @tab-requisiti-funzionali.
+
+#figure(
+  table(
   columns: (2cm, 1fr, 3.2cm),
   inset: 8pt,
   stroke: 0.5pt + rgb("b8b8bd"),
@@ -268,15 +271,18 @@ I requisiti funzionali definiscono le capacità che il sistema deve mettere a di
   [RF06], [Operazioni di manutenzione come riavvio, reset e condivisione della rete tramite QR Code.], [Completato],
   [RF07], [Gestione di fallback e cache locale in caso di assenza o instabilità della rete.], [Completato],
   [RF08], [Configurazione remota dei pannelli e della frequenza di aggiornamento da parte del CRM RelAi.], [Completato],
-)
-#align(center)[#emph([Tabella 3.1 - Requisiti funzionali e stato di completamento.])]
+  ),
+  caption: [Requisiti funzionali e stato di completamento],
+) <tab-requisiti-funzionali>
 
 === Requisiti non funzionali, di qualità e vincolo <requisiti-qualita-vincolo>
 
 I requisiti non funzionali descrivono le caratteristiche di qualità che un sistema embedded deve possedere per essere efficiente, affidabile e facilmente gestibile anche in contesti operativi reali. Tra questi, le criticità più rilevanti riguardano la stabilità del firmware, la reattività dell'interfaccia, l'usabilità del processo di configurazione e la sostenibilità del sistema sul lungo periodo.
 
-#table(
-  // Anche qui usiamo 1fr per distribuire uniformemente lo spazio orizzontale disponibile
+I requisiti non funzionali e di vincolo sono riportati nella @tab-requisiti-non-funzionali.
+
+#figure(
+  table(
   columns: (2.2cm, 1fr, 3.2cm),
   inset: 8pt,
   stroke: 0.5pt + rgb("b8b8bd"),
@@ -290,8 +296,9 @@ I requisiti non funzionali descrivono le caratteristiche di qualità che un sist
   [RV01], [Esecuzione del sistema su piattaforma ESP32 con vincoli di memoria, potenza computazionale e rendering.], [Completato],
   [RV02], [Integrazione con l'ecosistema RelAi e compatibilità con i dati e i protocolli aziendali.], [Completato],
   [RV03], [Possibilità di configurazione del dispositivo anche senza accesso a internet tramite modalità locale.], [Completato],
-)
-#align(center)[#emph([Tabella 3.2 - Requisiti non funzionali e di vincolo.])]
+  ),
+  caption: [Requisiti non funzionali e di vincolo],
+) <tab-requisiti-non-funzionali>
 
 === Conclusione sulla soddisfazione dei requisiti <conclusione-requisiti>
 

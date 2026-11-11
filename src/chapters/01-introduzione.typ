@@ -10,14 +10,14 @@ Questo elaborato presenta il progetto di stage svolto presso l'azienda *Spazio D
 \
 == L’azienda <lazienda>
 \
-Spazio Dev S.r.l. opera nel settore dello sviluppo software e della consulenza informatica, offrendo soluzioni tecnologiche avanzate per la gestione aziendale e dei flussi operativi. Il progetto di stage si inserisce nel contesto dell'ecosistema software aziendale, integrandosi con la piattaforma CRM RelAi per estendere le funzionalità di monitoraggio e interazione visiva direttamente su dispositivi _embedded_ installati presso gli utenti finali 
+Spazio Dev S.r.l. (@fig-logo-spaziodev) opera nel settore dello sviluppo software e della consulenza informatica, offrendo soluzioni tecnologiche avanzate per la gestione aziendale e dei flussi operativi. Il progetto di stage si inserisce nel contesto dell'ecosistema software aziendale, integrandosi con la piattaforma CRM RelAi per estendere le funzionalità di monitoraggio e interazione visiva direttamente su dispositivi _embedded_ installati presso gli utenti finali 
 
 #v(0.5cm)
 
 #figure(
   image("../../img/logo_spaziodev.jpeg", width: 50%),
   caption: [Logo di Spazio Dev S.r.l.],
-).
+) <fig-logo-spaziodev>
 \
 == Il progetto <il-progetto>
 \

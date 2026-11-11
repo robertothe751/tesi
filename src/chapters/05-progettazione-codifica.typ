@@ -22,7 +22,7 @@ L'architettura del software adotta un approccio modulare volto a disaccoppiare l
 \
 == Backend: avvio, task e accesso condiviso <backend-task>
 \
-La funzione `setup()` all'interno di `main.cpp` inizializza la seriale, il server locale, il display e LVGL, creando successivamente due task FreeRTOS dedicati e associati ai rispettivi core (@fig:setup). I task sono creati con priorità 1 per la rete e 2 per il display:
+La funzione `setup()` all'interno di `main.cpp` inizializza la seriale, il server locale, il display e LVGL, creando successivamente due task FreeRTOS dedicati e associati ai rispettivi core (@cod:setup). I task sono creati con priorità 1 per la rete e 2 per il display:
 \
 #figure(
   ```cpp
@@ -46,12 +46,12 @@ La funzione `setup()` all'interno di `main.cpp` inizializza la seriale, il serve
   }
   ```,
   caption: [Funzione `setup()` dell'ESP32-S3],
-) <fig:setup>
+) <cod:setup>
 \
 - *`NetworkTask` (Core 0, priorità 0)*: gestisce il provisioning Wi-Fi, il server web permanente, le richieste HTTP, il client WebSocket con il CRM, il download del logo dell'organizzazione e la segnalazione all'utente di eventuali perdite di connettività.
 - *`DisplayTask` (Core 1, priorità 1)*: esegue ciclicamente il rendering grafico e la gestione degli input tramite LVGL. La priorità numerica più alta assegna a questo task una precedenza maggiore rispetto al task di rete, senza costituire una garanzia assoluta di fluidità in presenza di operazioni bloccanti.
 \
-Poiché le risorse di LVGL non sono thread-safe, le operazioni grafiche sono protette mediante l'utilizzo del mutex lvgl_mutex, creato in init_display_touch_lvgl(). Il task del display acquisisce il semaforo prima di invocare l'handler dei timer grafici e ne limita il tempo di attesa tra 1 e 10 ms (@fig:display-task):
+Poiché le risorse di LVGL non sono thread-safe, le operazioni grafiche sono protette mediante l'utilizzo del mutex lvgl_mutex, creato in init_display_touch_lvgl(). Il task del display acquisisce il semaforo prima di invocare l'handler dei timer grafici e ne limita il tempo di attesa tra 1 e 10 ms (@cod:display-task):
 \
 #figure(
   ```cpp
@@ -77,13 +77,13 @@ Poiché le risorse di LVGL non sono thread-safe, le operazioni grafiche sono pro
   }
   ```,
   caption: [Ciclo principale del task di rendering],
-) <fig:display-task>
+) <cod:display-task>
 \
 Anche il `NetworkTask` utilizza lo stesso mutex ogni volta che deve interagire con l'interfaccia: aggiornamento delle etichette di stato ogni secondo, apertura e chiusura del messaggio di errore di rete (mostrato quando la connessione al router risulta assente da oltre 15 secondi, se è presente una rete salvata) e ricostruzione delle schermate. Quest'ultima avviene tramite un meccanismo a flag: i moduli che ricevono nuovi dati dal CRM invocano `ui_richiedi_ricarica_tileview()`, mentre il `NetworkTask` verifica periodicamente il flag con `ui_consuma_richiesta_ricarica()` e, se attivo, richiama `create_tileview()` mantenendo il mutex. In questo modo i thread di rete non manipolano mai direttamente gli oggetti grafici senza sincronizzazione.
 \
 == Backend: provisioning Wi-Fi e server locale <backend-wifi>
 \
-All'avvio del `NetworkTask`, il dispositivo attiva la modalità `WIFI_AP_STA`, avviando contemporaneamente un Access Point locale (`ESP32-Config`, IP `192.168.4.1`) e il tentativo di connessione alla rete station eventualmente salvata nelle `Preferences`. Un server DNS locale (`DNSServer`) risponde a qualsiasi dominio con l'indirizzo dell'Access Point, così da reindirizzare le richieste dei client verso il portale captive (@fig:provisioning). L'Access Point rimane attivo in modo permanente, anche a connessione STA avvenuta, in modo da consentire in qualsiasi momento la riconfigurazione del dispositivo.
+All'avvio del `NetworkTask`, il dispositivo attiva la modalità `WIFI_AP_STA`, avviando contemporaneamente un Access Point locale (`ESP32-Config`, IP `192.168.4.1`) e il tentativo di connessione alla rete station eventualmente salvata nelle `Preferences`. Un server DNS locale (`DNSServer`) risponde a qualsiasi dominio con l'indirizzo dell'Access Point, così da reindirizzare le richieste dei client verso il portale captive (@cod:provisioning). L'Access Point rimane attivo in modo permanente, anche a connessione STA avvenuta, in modo da consentire in qualsiasi momento la riconfigurazione del dispositivo.
 \
 #figure(
   ```cpp
@@ -104,11 +104,11 @@ All'avvio del `NetworkTask`, il dispositivo attiva la modalità `WIFI_AP_STA`, a
   }
   ```,
   caption: [Avvio dell'Access Point e del DNS captive (versione sintetizzata)],
-) <fig:provisioning>
+) <cod:provisioning>
 \
 Le richieste il cui header `Host` non coincide con l'indirizzo dell'Access Point vengono ridirezionate con una risposta HTTP 302 verso `http://192.168.4.1/`; le URL di verifica della connettività dei sistemi operativi (ad esempio `generate_204`) ricevono invece una risposta 204. I file statici del portale sono letti da LittleFS, con supporto ai file compressi `.gz` serviti con l'header `Content-Encoding: gzip`.
 \
-Il server HTTP espone endpoint REST dedicati alla gestione e alla manutenzione del sistema, registrati in `inizializza_sistema_reti()` (@fig:routes). Tra questi, `/scan` esegue la scansione asincrona delle reti disponibili, `/connect` verifica le credenziali ricevute tentando la connessione STA e le salva in caso di successo, `/status` restituisce lo stato corrente in formato JSON, mentre `/reset_wifi`, `/reboot` e `/reset_factory` consentono rispettivamente la cancellazione delle credenziali, il riavvio e il ripristino di fabbrica. La funzione `inizializza_api()` aggiunge infine l'endpoint `/api/events`, che restituisce la cache locale degli eventi.
+Il server HTTP espone endpoint REST dedicati alla gestione e alla manutenzione del sistema, registrati in `inizializza_sistema_reti()` (@cod:routes). Tra questi, `/scan` esegue la scansione asincrona delle reti disponibili, `/connect` verifica le credenziali ricevute tentando la connessione STA e le salva in caso di successo, `/status` restituisce lo stato corrente in formato JSON, mentre `/reset_wifi`, `/reboot` e `/reset_factory` consentono rispettivamente la cancellazione delle credenziali, il riavvio e il ripristino di fabbrica. La funzione `inizializza_api()` aggiunge infine l'endpoint `/api/events`, che restituisce la cache locale degli eventi.
 \
 #figure(
   ```cpp
@@ -132,7 +132,7 @@ Il server HTTP espone endpoint REST dedicati alla gestione e alla manutenzione d
   }
   ```,
   caption: [Registrazione degli endpoint del server HTTP locale],
-) <fig:routes>
+) <cod:routes>
 \
 La scansione delle reti è avviata in modalità asincrona. Il firmware disconnette temporaneamente la STA solo se non è già connessa; in tal caso, al termine della scansione tenta di ripristinare il collegamento usando le credenziali salvate. Il server viene gestito dal `NetworkTask` tramite `gestisci_wifi_prov()`, che elabora le richieste DNS e HTTP e invoca la gestione periodica del client WebSocket e dell'heartbeat.
 \
@@ -140,7 +140,7 @@ La scansione delle reti è avviata in modalità asincrona. Il firmware disconnet
 
 === Heartbeat e telemetria
 \
-Il dispositivo invia periodicamente richieste HTTP POST (heartbeat) all'endpoint del CRM, autenticandosi con un token Bearer e trasmettendo dati di telemetria quali uptime, memoria heap libera e intensità del segnale RSSI (@fig:heartbeat). Il client TLS è condiviso tra heartbeat e autenticazione dei canali WebSocket, per riutilizzare la connessione (keep-alive) e ridurre il consumo di memoria.
+Il dispositivo invia periodicamente richieste HTTP POST (heartbeat) all'endpoint del CRM, autenticandosi con un token Bearer e trasmettendo dati di telemetria quali uptime, memoria heap libera e intensità del segnale RSSI (@cod:heartbeat). Il client TLS è condiviso tra heartbeat e autenticazione dei canali WebSocket, per riutilizzare la connessione (keep-alive) e ridurre il consumo di memoria.
 \
 #figure(
   ```cpp
@@ -177,13 +177,13 @@ Il dispositivo invia periodicamente richieste HTTP POST (heartbeat) all'endpoint
   }
   ```,
   caption: [Invio dell'heartbeat con telemetria (versione sintetizzata)],
-) <fig:heartbeat>
+) <cod:heartbeat>
 \
 La risposta del server contiene l'intervallo del prossimo heartbeat (limitato a un valore compreso tra 10 e 300 secondi, con default di 30), eventuali comandi da eseguire, le impostazioni di visualizzazione (intervallo di rotazione delle schermate, minimo 5 secondi) e l'elenco degli eventi. In caso di errore, il tentativo viene ripetuto dopo 15 secondi. La scadenza dei timer è calcolata con un confronto su differenza a 32 bit (`scaduto()`), che rimane corretto anche all'overflow del contatore `millis()`.
 \
 === Cache degli eventi e persistenza
 \
-Gli eventi ricevuti (al massimo dieci, ciascuno con identificativo, nome, link per il QR code, numero di prenotazioni e di partecipanti) vengono confrontati con quelli già in memoria: solo se differiscono la cache RAM viene aggiornata e il contenuto è scritto nella memoria NVS tramite la libreria `Preferences`, limitando così le scritture sulla flash. Le chiavi relative a posizioni non più utilizzate vengono rimosse, e al termine viene richiesta la ricostruzione dell'interfaccia (@fig:salva-eventi).
+Gli eventi ricevuti (al massimo dieci, ciascuno con identificativo, nome, link per il QR code, numero di prenotazioni e di partecipanti) vengono confrontati con quelli già in memoria: solo se differiscono la cache RAM viene aggiornata e il contenuto è scritto nella memoria NVS tramite la libreria `Preferences`, limitando così le scritture sulla flash. Le chiavi relative a posizioni non più utilizzate vengono rimosse, e al termine viene richiesta la ricostruzione dell'interfaccia (@cod:salva-eventi).
 \
 #figure(
   ```cpp
@@ -229,7 +229,7 @@ Gli eventi ricevuti (al massimo dieci, ciascuno con identificativo, nome, link p
   }
   ```,
   caption: [Aggiornamento e salvataggio persistente degli eventi (versione sintetizzata)],
-) <fig:salva-eventi>
+) <cod:salva-eventi>
 \
 Alla lettura (`api_get_cached_events()`), se la cache in RAM è vuota — ad esempio dopo un riavvio — gli eventi vengono ricostruiti dalla NVS. Il dispositivo è quindi in grado di mostrare gli ultimi dati noti anche in assenza di connettività. Per questo motivo la funzione `ui_load_cached_data()` invocata in `setup()` non deve eseguire alcuna operazione: il caricamento avviene in modo differito alla prima costruzione delle schermate.
 \
@@ -254,7 +254,7 @@ Il `NetworkTask` scarica il logo dell'organizzazione fuori dal mutex LVGL, con u
 \
 == Frontend sul display: LVGL <frontend-lvgl>
 \
-L'interfaccia grafica si appoggia sui driver hardware del display AMOLED e del touch screen capacitivo configurati in `display_config.cpp`. La funzione `init_display_touch_lvgl()` avvia il display, inizializza il touch, alloca due buffer di rendering in PSRAM (la memoria viene verificata e, se non disponibile, il firmware si arresta) e configura LVGL 9 in modalità di rendering parziale a doppio buffer con formato colore RGB565. Un timer hardware incrementa il tick di LVGL ogni 2 ms, mentre un callback di arrotondamento (`rounder_cb`) forza le aree invalidate ad avere coordinate iniziali pari e finali dispari, come richiesto dal controller CO5300 (@fig:init-display).
+L'interfaccia grafica si appoggia sui driver hardware del display AMOLED e del touch screen capacitivo configurati in `display_config.cpp`. La funzione `init_display_touch_lvgl()` avvia il display, inizializza il touch, alloca due buffer di rendering in PSRAM (la memoria viene verificata e, se non disponibile, il firmware si arresta) e configura LVGL 9 in modalità di rendering parziale a doppio buffer con formato colore RGB565. Un timer hardware incrementa il tick di LVGL ogni 2 ms, mentre un callback di arrotondamento (`rounder_cb`) forza le aree invalidate ad avere coordinate iniziali pari e finali dispari, come richiesto dal controller CO5300 (@cod:init-display).
 \
 #figure(
   ```cpp
@@ -283,9 +283,9 @@ L'interfaccia grafica si appoggia sui driver hardware del display AMOLED e del t
   }
   ```,
   caption: [Inizializzazione di display, touch e LVGL (versione sintetizzata)],
-) <fig:init-display>
+) <cod:init-display>
 \
-Le due varianti hardware differiscono nella configurazione del touch e nei parametri del display. Nella variante da 1,75 pollici il touch è gestito dalla libreria `TouchDrvCSTXXX` con un controller della famiglia CST92xx; le coordinate sono adattate all'orientamento tramite le costanti `TOUCH_INVERT_X`, `TOUCH_INVERT_Y` e `TOUCH_SWAP_XY`. Nella variante da 1,8 pollici il controller CST820 è gestito tramite il driver della famiglia CST816x, collegato via I²C; il display usa il bus QSPI a 40 MHz e buffer alti un decimo dello schermo. L'avvio del pannello passa inoltre da un expander I/O; per il touch sono presenti sia un tentativo di disabilitare l'autosleep sia un debounce di 50 ms sul rilascio (@fig:touch).
+Le due varianti hardware differiscono nella configurazione del touch e nei parametri del display. Nella variante da 1,75 pollici il touch è gestito dalla libreria `TouchDrvCSTXXX` con un controller della famiglia CST92xx; le coordinate sono adattate all'orientamento tramite le costanti `TOUCH_INVERT_X`, `TOUCH_INVERT_Y` e `TOUCH_SWAP_XY`. Nella variante da 1,8 pollici il controller CST820 è gestito tramite il driver della famiglia CST816x, collegato via I²C; il display usa il bus QSPI a 40 MHz e buffer alti un decimo dello schermo. L'avvio del pannello passa inoltre da un expander I/O; per il touch sono presenti sia un tentativo di disabilitare l'autosleep sia un debounce di 50 ms sul rilascio (@cod:touch).
 \
 #figure(
   ```cpp
@@ -315,7 +315,7 @@ Le due varianti hardware differiscono nella configurazione del touch e nei param
   }
   ```,
   caption: [Lettura del touch con debounce nella variante con controller CST820],
-) <fig:touch>
+) <cod:touch>
 \
 === Struttura e navigazione delle schermate
 \

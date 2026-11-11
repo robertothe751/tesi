@@ -22,7 +22,10 @@
   block(spacing: 1em)[
     *UC #id: #title*
     #if image-path != none [
-      \ #align(center)[#image(image-path, width: 100%)] \
+      #figure(
+        image(image-path, width: 100%),
+        caption: [Diagramma del caso d'uso UC#id: #title],
+      )
     ] else [
       \
     ]
