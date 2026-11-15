@@ -48,8 +48,8 @@ La funzione `setup()` all'interno di `main.cpp` inizializza la seriale, il serve
   caption: [Funzione `setup()` dell'ESP32-S3],
 ) <cod:setup>
 \
-- *`NetworkTask` (Core 0, priorità 0)*: gestisce il provisioning Wi-Fi, il server web permanente, le richieste HTTP, il client WebSocket con il CRM, il download del logo dell'organizzazione e la segnalazione all'utente di eventuali perdite di connettività.
-- *`DisplayTask` (Core 1, priorità 1)*: esegue ciclicamente il rendering grafico e la gestione degli input tramite LVGL. La priorità numerica più alta assegna a questo task una precedenza maggiore rispetto al task di rete, senza costituire una garanzia assoluta di fluidità in presenza di operazioni bloccanti.
+- *`NetworkTask` (Core 0, priorità 1)*: gestisce il provisioning Wi-Fi, il server web permanente, le richieste HTTP, il client WebSocket con il CRM, il download del logo dell'organizzazione e la segnalazione all'utente di eventuali perdite di connettività.
+- *`DisplayTask` (Core 1, priorità 2)*: esegue ciclicamente il rendering grafico e la gestione degli input tramite LVGL. La priorità numerica più alta assegna a questo task una precedenza maggiore rispetto al task di rete, garantendo la reattività dell'interfaccia grafica.
 \
 Poiché le risorse di LVGL non sono thread-safe, le operazioni grafiche sono protette mediante l'utilizzo del mutex lvgl_mutex, creato in init_display_touch_lvgl(). Il task del display acquisisce il semaforo prima di invocare l'handler dei timer grafici e ne limita il tempo di attesa tra 1 e 10 ms (@cod:display-task):
 \
@@ -83,7 +83,7 @@ Anche il `NetworkTask` utilizza lo stesso mutex ogni volta che deve interagire c
 \
 == Backend: provisioning Wi-Fi e server locale <backend-wifi>
 \
-All'avvio del `NetworkTask`, il dispositivo attiva la modalità `WIFI_AP_STA`, avviando contemporaneamente un Access Point locale (`ESP32-Config`, IP `192.168.4.1`) e il tentativo di connessione alla rete station eventualmente salvata nelle `Preferences`. Un server DNS locale (`DNSServer`) risponde a qualsiasi dominio con l'indirizzo dell'Access Point, così da reindirizzare le richieste dei client verso il portale captive (@cod:provisioning). L'Access Point rimane attivo in modo permanente, anche a connessione STA avvenuta, in modo da consentire in qualsiasi momento la riconfigurazione del dispositivo.
+All'avvio del NetworkTask, il dispositivo attiva la modalità WIFI_AP_STA, avviando contemporaneamente un Access Point locale e il tentativo di connessione alla rete station eventualmente salvata nelle Preferences. Un server DNS locale risponde a qualsiasi dominio con l'indirizzo dell'Access Point, così da reindirizzare le richieste dei client verso il portale captive (@cod:provisioning). L'Access Point rimane attivo in modo permanente, anche a connessione STA avvenuta, in modo da consentire in qualsiasi momento la riconfigurazione del dispositivo..
 \
 #figure(
   ```cpp
