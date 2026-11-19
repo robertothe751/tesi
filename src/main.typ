@@ -114,6 +114,25 @@ L'elaborato è articolato in sette capitoli, seguiti dal glossario e dai riferim
 #pagebreak()
 = Ringraziamenti <ringraziamenti>
 
+#v(1em)
+
+#set par(spacing: 1.6em)
+
+Innanzitutto, desidero ringraziare il mio relatore, il Prof. Marco Zanella, per la disponibilità, la pazienza e i preziosi consigli con cui mi ha guidato durante lo svolgimento e la stesura di questa tesi.
+
+Un sentito ringraziamento va anche all'azienda Spazio Dev e al mio tutor aziendale, Matteo Forzan, per avermi dato l'opportunità di svolgere lo stage e per il costante supporto ricevuto durante tutto il progetto.
+
+Un ringraziamento speciale e profondo va ai miei genitori, che mi hanno sempre accompagnato e sostenuto in ogni fase di questo percorso. Grazie per aver creduto in me fin dal primo giorno, per i sacrifici fatti e per avermi dato la serenità e la forza necessarie per affrontare anche i momenti più complessi, senza mai farmi mancare il vostro affetto.
+
+Ringrazio inoltre tutti i miei familiari, per essere stati un punto di riferimento costante, per avermi incoraggiato nei periodi di studio più intenso e per aver condiviso con me la gioia di ogni piccolo traguardo raggiunto.
+
+Desidero poi ringraziare di cuore tutti i miei amici, che hanno reso questi anni indimenticabili con la loro presenza costante e sincera. Grazie per essermi stati vicini nei momenti di fatica e per avermi regalato serate, risate, chiacchierate e spensieratezza indispensabili per staccare la spina, alleggerire le giornate più pesanti e ripartire sempre con la giusta energia.
+
+#v(1.5em)
+
+Padova, Novembre 2026 #h(1fr) Roberto Mariano Doroftei
+
+
 #pagebreak()
 = Indice <indice>
 #outline(title: none, depth: 5)
